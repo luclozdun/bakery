@@ -1,0 +1,29 @@
+.icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+
+.icon-cake{ background-image: url('../svg/icon_cake.svg'); }
+
+.icon-gps{ background-image: url('../svg/icon_gps.svg'); }
+
+.icon-card-add{ background-image: url('../svg/icon_card_add.svg'); }
+
+.icon-bakery-add{ background-image: url('../svg/icon_bakery_add.svg'); }
+
+.icon-user-private{ background-image: url('../svg/icon_user_private.svg'); }
+
+.icon-user{ background-image: url('../svg/icon_user.svg'); }
+
+.icon-order{ background-image: url('../svg/icon_order.svg'); }
+
+.icon-edit{ background-image: url('../svg/icon_edit.svg'); }
+
+.icon-arrow-right{ background-image: url('../svg/icon_arrow.svg'); }
