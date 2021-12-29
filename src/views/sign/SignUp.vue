@@ -6,13 +6,16 @@
     </div>
     <div class="login-card">
         <div class="login-action">
-            <input placeholder="Ingrese su usuario">    
+            <input placeholder="Ingrese su usuario" v-model="login.username">
         </div>
         <div class="login-action">
-            <input placeholder="Ingrese su contraseña">    
+            <input placeholder="Ingrese su contraseña" v-model="login.password">
+        </div>
+        <div class="login-action invalid" v-if="invalid === true">
+          <p>Credenciales invalidas</p>
         </div>
         <div class="login-action">
-            <button class="login">Iniciar Sesion</button>
+            <button class="login" @click="authentication()">Iniciar Sesion</button>
         </div>
         <div class="login-action">
             <p>¿Olvidaste tu contraseña?</p>
@@ -24,17 +27,48 @@
             <button class="singup">Registrate</button>
         </div>
     </div>
+    <loading v-if="loading===true"></loading>
 </div>
     
 </template>
 
-<script lang="ts">
+<script>
+import CustomerService from '@/service/user/CustomerService'
+import Loading from '../../components/Loading.vue';
+
 export default {
+  components: { Loading },
   name: "Login",
+  data() {
+    return {
+      login: {
+        username: '',
+        password: ''        
+      },
+      loading: false,
+      invalid: false
+    }
+  },
+  methods: {
+    authentication(){
+      this.loading = true
+      CustomerService.authenticate(this.login).then(() => {
+        this.loading=false
+        console.log(this.loading)
+      }).catch(() => {
+        this.loading=false
+        this.invalid = true
+      })
+    }
+  }
 };
 </script>
 
 <style>
+input:not(:focus):not(:placeholder-shown):invalid  ~input[type=date]{
+    border: 1px solid red !important;
+}
+
 div.login {
   width: 900px;
   margin: 100px auto;
@@ -76,6 +110,12 @@ div.login-card > div.login-action {
   justify-content: center;
 }
 
+div.login-card div.login-action.invalid p{
+  color: rgb(167, 13, 13);
+  margin: 25px 0 0 0;
+  text-decoration: none;
+}
+
 div.login-card > div.login-action > input,
 div.login-card > div.login-action > button {
   border-radius: 10px;
@@ -87,6 +127,7 @@ div.login-card > div.login-action > input::placeholder{
 
 div.login-card > div.login-action > input {
   color: var(--second);
+  background: var(--default);
   flex: 0.8;
   padding: 0.6em;
   border-radius: 10px;
@@ -94,10 +135,6 @@ div.login-card > div.login-action > input {
   margin-top: 30px;
   font-size: 1.1rem;
   font-family: Poppins-Bold;
-}
-
-div.login-card > div.login-action > input:focus {
-  box-shadow: 0px 0px 3px var(--primary-inten);
 }
 
 div.login-card > div.login-action > button.login {

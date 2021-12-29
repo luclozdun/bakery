@@ -4,104 +4,81 @@
             <div class="header">
             </div>
             <div class="main">
-                <div class="card">
-                    <div class="img">
+                <div class="food">
+                    <div class="title">Tortas</div>
+                    <div class="products">
+                        <div class="card">
+                        <div class="img">
+                        </div>
+                        <div class="cook">
+                            <div class="c-title">
+                                <p>Tres Leche</p>
+                            </div>
+                            <div class="c-cook">
+                                <p>Chantilly</p>
+                            </div>
+                            <div class="c-cook">
+                                <p>Mediano</p>
+                            </div>
+                            <div class="c-cook">
+                                <p>Vainilla</p>
+                            </div>
+                            <div class="c-cook special">
+                                <div class="c-cook-view">
+                                    <div class="cook-carousel">
+                                        <div class="cook-img"></div>
+                                        <p>Relleno Manjar</p>
+                                    </div>
+                                    <div class="cook-carousel">
+                                        <div class="cook-img"></div>
+                                        <p>Mermelada fresa</p>
+                                    </div>
+                                    <div class="cook-carousel">
+                                        <div class="cook-img"></div>
+                                        <p>Relleno asdas</p>
+                                    </div>
+                                    <div class="cook-carousel">
+                                        <div class="cook-img"></div>
+                                        <p>Relleno asdas</p>
+                                    </div>
+                                    <div class="cook-carousel">
+                                        <div class="cook-img"></div>
+                                        <p>Relleno asdas</p>
+                                    </div>                                                
+                                </div>
+                            </div>
+                            <div class="c-cook green">
+                                <p>S/ 85.00</p>
+                            </div>
+                        </div>                    
                     </div>
-                    <div class="cook">
-                        <div class="c-title">
-                            <p>Tres Leches</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Chantilly</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Mediano</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Vainilla</p>
-                        </div>
-                        <div class="c-cook special" value="0">
-                            <div class="c-cook-arrow left"></div>
-                            <div class="c-cook-center">
-                                <div class="cook-carousel">
-                                    <p>Relleno</p>
-                                </div>
-                                <div class="cook-carousel">
-                                    <p>Relleno1</p>
-                                </div>
-                                <div class="cook-carousel">
-                                    <p>Relleno2</p>
-                                </div>
-                            </div>                            
-                            <div class="c-cook-arrow right"></div>
-                        </div>
-                    </div>                    
+                    </div>
                 </div>
-                <div class="card">
-                    <div class="img">
+                <div class="food">
+                    <div class="title">Pie</div>
+                    <div class="products">
+                        <div class="card">
+                        <div class="img">
+                        </div>
+                        <div class="cook">
+                            <div class="c-title">
+                                <p>Pie</p>
+                            </div>
+                            <div class="c-cook">
+                                <p>Manzana</p>
+                            </div>
+                            <div class="c-cook">
+                                <p>Mediano</p>
+                            </div>
+                            <div class="c-cook">
+                                <p>Circular</p>
+                            </div>
+                            <div class="c-cook green">
+                                <p>S/ 85.00</p>
+                            </div>
+                        </div>                    
                     </div>
-                    <div class="cook">
-                        <div class="c-title">
-                            <p>Tres Leches</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Chantilly</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Mediano</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Vainilla</p>
-                        </div>
-                        <div class="c-cook special" value="0">
-                            <div class="c-cook-arrow left"></div>
-                            <div class="c-cook-center">
-                                <div class="cook-carousel">
-                                    <p>Relleno</p>
-                                </div>
-                                <div class="cook-carousel">
-                                    <p>Relleno1</p>
-                                </div>
-                                <div class="cook-carousel">
-                                    <p>Relleno2</p>
-                                </div>
-                            </div>                            
-                            <div class="c-cook-arrow right"></div>
-                        </div>
-                    </div>                    
-                </div>
-                <div class="card">
-                    <div class="img">
                     </div>
-                    <div class="cook">
-                        <div class="c-title">
-                            <p>Tres Leches</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Chantilly</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Mediano</p>
-                        </div>
-                        <div class="c-cook">
-                            <p>Vainilla</p>
-                        </div>
-                        <div class="c-cook special" value="0">
-                            <div class="c-cook-arrow left"></div>
-                            <div class="c-cook-center">
-                                <div class="cook-carousel">
-                                    <p>Relleno</p>
-                                </div>
-                                <div class="cook-carousel">
-                                    <p>Relleno1</p>
-                                </div>
-                                <div class="cook-carousel">
-                                    <p>Relleno2</p>
-                                </div>
-                            </div>                            
-                            <div class="c-cook-arrow right"></div>
-                        </div>
-                    </div>                    
                 </div>
             </div>
             <div class="sidebar">
@@ -178,29 +155,43 @@ div.product-grid div.header{
 
 div.product-grid div.main{
     grid-area: main;
+    display: grid;  
+}
+
+div.product-grid div.main div.food div.title{
+    font-size: 2em;
+    font-family: Poppins-Bold;
+    color: var(--second);
+    
+}
+
+div.product-grid div.main div.products{
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
 }
 
 div.product-grid div.main div.card{
+    padding: 0.5rem 0;
     grid-column: span 2;
     font-family: Poppins-Regular;
-    box-shadow: 0px 0px 2px var(--primary);
+    box-shadow: 0px 0px 2px 0px var(--primary);
     display: flex;
     flex-direction: row;
+    position: relative;
+    border-radius: 5px;
 }
 
 div.product-grid div.main div.card div.c-title{
-    margin: 0.6em 0;
-    font-size: 1rem;
+    margin: 0 0 0.6em 0;
+    font-size: 1.3rem;
+    font-family: Poppins-Bold;
     text-align: center;
 }
 
 div.product-grid div.main div.card div.cook{
-    flex: 1.8;
+    width: 100%;
     height: auto;
-    display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
@@ -208,62 +199,83 @@ div.product-grid div.main div.card div.cook{
 }
 
 div.product-grid div.main div.card div.c-cook{
-    width: 70%;
+    width: 80%;
     font-size: 0.8rem;
-    background: rgb(237, 216, 255);
+    background: #f9f1ff;
     border-radius: 0.5em;
     margin: 0.5em 0 0 0;
     padding: 0.5em 0.2em;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin: 10px auto 0 auto;
     position: relative;
 }
 
 div.product-grid div.main div.card div.c-cook.special{
-    height: 50px;
     padding: 0;
+    overflow:auto;
 }
 
-div.product-grid div.main div.card div.c-cook div.c-cook-arrow{
-    width: 20px;
-    height: 100%;
-    position: absolute;
-    background: palegreen;
+div.product-grid div.main div.card div.c-cook.special div.c-cook-view{
+    white-space: nowrap;
+    padding: 1.3em 0;
 }
 
-div.product-grid div.main div.card div.c-cook .left{
-    left: 0;
+div.product-grid div.main div.card div.c-cook.special div.cook-carousel{
+    display: inline-flex;
+    flex-direction: column;
+    width: 72px;
+    font-size: 0.65rem;
+    
 }
 
-div.product-grid div.main div.card div.c-cook .right{
-    right: 0;
+div.product-grid div.main div.card div.c-cook.special div.cook-carousel div.cook-img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    margin: 0 auto;
 }
 
-div.product-grid div.main div.card div.c-cook div.c-cook-center{
-    width: 100%;
-    height: 100%;
-    display: inline-block;
-    word-break: keep-all;
+div.product-grid div.main div.card div.c-cook.special div.cook-carousel p{
+    display: inline;
+    white-space:normal;
 }
 
-div.product-grid div.main div.card div.c-cook div.c-cook-center div{
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    display: none;    
-    justify-content: center;  
+div.product-grid div.main div.card div.c-cook.green{
+    background: rgb(18, 221, 18);
+    color: rgb(255, 255, 255);
+    font-size: 0.9em;
+    font-family: Poppins-Bold;
 }
 
-div.product-grid div.main div.card div.c-cook div.c-cook-center div p{
-    width: 70%;
+/* width */
+div.product-grid div.main div.card div.c-cook.special::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+div.product-grid div.main div.card div.c-cook.special::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+div.product-grid div.main div.card div.c-cook.special::-webkit-scrollbar-thumb {
+  background: var(--primary); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+div.product-grid div.main div.card div.c-cook.special::-webkit-scrollbar-thumb:hover {
+  background: var(--second); 
 }
 
 div.product-grid div.main div.card div.img{
-    flex: 1;
+    width: 40%;
     height: 100%;
-    background: rgb(255, 218, 218);
+    display: none;
+    background: rgb(192, 171, 207);
 }
 
 div.product-grid div.sidebar{
@@ -319,13 +331,12 @@ div.filter-container div.filter:last-child::after{
         display: none;
     }
 
-    
-}
+    div.product-grid div.main div.card div.img{
+        width: 100%;
+        position: absolute;
+    }
 
-@media (max-width: 410px) {
-    div.product-grid div.main{
-        grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
-    }    
+    
 }
 
 </style>

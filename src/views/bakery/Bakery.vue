@@ -1,40 +1,45 @@
 <template>
     <div>
-    <div class="search-location">
-            <input placeholder="buscar por locacion">
-    </div>
-    <div class="bakeries" v-for="bakery in bakeries" :key="bakery.id">
-        <div class="card-bakery">
-            <div class="card-bakery-icon">
-                <div>
+        <div class="search-location">
+                <input placeholder="buscar por locacion">
+        </div>
+        <div class="bakeries" v-for="bakery in bakeries" :key="bakery.id">
+            <div class="card-bakery">
+                <div class="card-bakery-icon">
+                    <div>
 
+                    </div>
                 </div>
-            </div>
-            <div class="card-bakery-desc">
-                <p class="title">{{ bakery.name }}</p>
-                <p class="desc">{{ bakery.desc }}</p>
-                <p class="desc">Costo: {{ bakery.cost }}</p>
-                <p class="desc">Ubicacion: {{ bakery.location }}</p>
-                <div class="option">
-                    <router-link :to="{name: 'Product', params: { id: bakery.id }}">
-                        <button class="first">Visualizar Carta</button>
-                    </router-link>
-                    <router-link :to="{name: 'Product', params: { id: bakery.id }}">
-                        <button class="second">Reservar pedido</button>
-                    </router-link>
+                <div class="card-bakery-desc">
+                    <p class="title">{{ bakery.name }}</p>
+                    <p class="desc">{{ bakery.desc }}</p>
+                    <p class="desc">Costo: {{ bakery.cost }}</p>
+                    <p class="desc">Ubicacion: {{ bakery.location }}</p>
+                    <div class="option">
+                        <router-link :to="{name: 'Product', params: { id: bakery.id }}">
+                            <button class="first">Visualizar Carta</button>
+                        </router-link>
+                        <router-link :to="{name: 'Product', params: { id: bakery.id }}">
+                            <button class="second">Reservar pedido</button>
+                        </router-link>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </template>
 
 <script>
+
+import TasteCake from '@/service/cake/TasteCake'
+
+
 export default{
     name: 'Bakery',
     data(){
         return{
-            bakeries: Array
+            bakeries: Array,
+            tasteCakes: []
         }
     },
     methods: {
@@ -44,10 +49,19 @@ export default{
                 {id: 1, name: 'San Benito', desc: 'Somos una pasteleria con productos naturales', cost: '$$', location: 'Jr. Asamblea 475'},
                 {id: 2, name: 'Veganito', desc: 'Pasteleria vegana', cost: '$$$', location: 'Av. Acapulco 354'}
             ]
+        },
+        notasd(){
+            TasteCake.getAll().then(response => {
+                this.tasteCakes = response.data
+                console.log(response.data)
+            }).catch(e => {
+                console.log(e)
+            })
         }
     },
     mounted() {
-        this.values();
+        this.values()
+        this.notasd()        
     }
 }
 </script>

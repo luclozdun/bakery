@@ -1,5 +1,4 @@
 <template>
-    <div>
     <div class="signup">
         <div class="signup-social">
             <div class="singup-center">
@@ -25,38 +24,57 @@
                 <h1>Register</h1>
             </div>
             <div class="signup-action">
-                <input placeholder="Nombre">
+                <input placeholder="Nombre" v-model="customer.name" required maxlength="15">
             </div>
             <div class="signup-action">
-                <input placeholder="Apellido">
+                <input placeholder="Usuario" v-model="customer.username" required maxlength="20">
             </div>
             <div class="signup-action">
-                <input placeholder="Usuario">
+                <input placeholder="Correo" v-model="customer.email" type="email" required maxlength="40">
             </div>
             <div class="signup-action">
-                <input placeholder="Correo">
+                <input placeholder="Numero" v-model="customer.number" required minlength="9" maxlength="9">
             </div>
             <div class="signup-action">
-                <input placeholder="Contraseña">
+                <input placeholder="Contraseña" v-model="customer.password" type="password" required maxlength="20">
             </div>
             <div class="signup-action">
-                <div class="date">
-                    <input class="year" placeholder="Año">
-                    <input class="month" placeholder="Mes">
-                    <input class="day" placeholder="Dia">
-                </div>
+                <input type="date" required v-model="brithday">
             </div>
             <div class="signup-action">
-                <button class="signup">Crear Cuenta</button>
+                <button class="signup" @click="asd()">Crear Cuenta</button>
             </div>
         </div>                
     </div>
-</div>
 </template>
 
 <script>
+import CustomerService from '@/service/user/CustomerService'
+import moment from 'moment'
+
 export default{
-    name: 'SignIn'
+    name: 'SignIn',
+    data() {
+        return {
+            customer: {
+                name: '',
+                username: '',
+                number: '',
+                password: '',
+                email: '',
+                brithday: '',
+                image: ''
+            },
+            brithday: ''
+        }
+    },
+    methods: {
+        asd(){
+            this.customer.brithday = moment(this.brithday).format('DD/MM/YYYY')
+            console.log(this.customer)
+            CustomerService.postCustomer(this.customer).catch(e => console.log(e))
+        }
+    }
 }
 </script>
 
@@ -158,6 +176,10 @@ div.signup-normal > div.signup-action, div.signup-social > div.singup-center > d
     flex: 1;
 }
 
+input:not(:focus):not(:placeholder-shown):invalid  ~input[type=date]{
+    border: 1px solid red !important;
+}
+
 div.signup-normal > div.signup-action > h1{
     font-size: 2.3rem;
     margin: 1em 0;
@@ -165,9 +187,12 @@ div.signup-normal > div.signup-action > h1{
     color: var(--primary-inten);
 }
 
-div.signup-normal > div.signup-action > input::placeholder,
-div.signup-normal > div.signup-action > div.date > input::placeholder{
+div.signup-normal > div.signup-action > input::placeholder{
   color: var(--placeholder-second);
+}
+
+input[type=date]:not(:focus):not(:placeholder-shown):invalid {
+    color: var(--placeholder-second);
 }
 
 div.signup-normal > div.signup-action > input{
@@ -175,31 +200,10 @@ div.signup-normal > div.signup-action > input{
     color: var(--second);
     flex: 0.8;
     margin: 0.8em 0;
-    padding: 0.6em 0.5em;
+    padding: 0.5em 0.5em;
     border-radius: 5px;
     font-size: 1.1rem;
     font-family: Poppins-Bold;
-}
-
-div.signup-normal > div.signup-action > div.date{
-    flex: 0.8;
-    display: flex;
-    justify-content: space-between;
-}
-
-div.signup-normal > div.signup-action > div.date > input{
-    border: 1px solid var(--input-box);
-    margin: 0.5em 0;
-    padding: 0.5em;
-    border-radius: 5px;
-    width: 60px;
-    color: #FF6767;
-    font-size: 1rem;
-    font-family: Poppins-Bold;
-}
-
-div.signup-normal > div.signup-action > input:focus, div.signup-normal > div.signup-action > div.date > input:focus   {
-    box-shadow: 0px 0px 2px var(--input-box);
 }
 
 div.signup-normal > div.signup-action > button.signup{
@@ -237,7 +241,7 @@ div.signup-normal > div.signup-action > button.signup:active{
         font-size: 18px;
     }
 
-    div.signup > div.signup-action > div.date > input{
+    div.signup > div.signup-action > div.date > select{
         width: 35px;
     }
 
@@ -249,7 +253,7 @@ div.signup-normal > div.signup-action > button.signup:active{
     font-size: 30px;
     }
 
-    div.signup-normal > div.signup-action > div.date > input{
+    div.signup-normal > div.signup-action > div.date > select{
         width: 50px;
     }
 
