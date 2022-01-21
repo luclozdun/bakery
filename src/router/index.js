@@ -4,11 +4,11 @@ import Home from '../views/home/Home.vue'
 
 
 import SignIn from '../views/sign/SignIn.vue'
-import signUp from '../views/sign/SignUp.vue'
+import SignUp from '../views/sign/SignUp.vue'
+import SignInBaker from '../views/sign/SignInBaker.vue'
 
 import Bakery from '../views/bakery/Bakery.vue'
-import Product from '../views/bakery/Products.vue'
-import Cake from '../views/foods/Cake.vue'
+import BakeryProducts from '../views/bakery/BakeryProducts.vue'
 
 import Profile from '../views/profile/Profile.vue'
 import AddBusiness from '../views/profile/profile-sub/AddBusiness.vue'
@@ -17,7 +17,9 @@ import AddLocation from '../views/profile/profile-sub/AddLocation.vue'
 import MyOrders from '../views/profile/profile-sub/MyOrder.vue'
 import MyPrivacy from '../views/profile/profile-sub/Privacy.vue'
 import MySurprise from '../views/profile/profile-sub/Surprise.vue'
-
+import CheckBaker from '../views/permissbaker/CheckBaker.vue'
+import AddProduct from '../views/profile/profile-sub/AddProduct.vue'
+import Order from '../views/order/Order.vue'
 
 Vue.use(VueRouter)
 
@@ -28,14 +30,19 @@ const routes = [
     component: Home
   },
   {
-    path: '/register',
+    path: '/login/customer',
     name: 'SignIn',
     component: SignIn
   },
   {
-    path: '/login',
+    path: '/login/baker',
+    name: 'SignInBaker',
+    component: SignInBaker
+  },
+  {
+    path: '/register',
     name: 'SignUp',
-    component: signUp
+    component: SignUp
   },
   {
     path: '/bakery',
@@ -44,13 +51,8 @@ const routes = [
   },
   {
     path: '/bakery/:id',
-    name: 'Product',
-    component: Product,
-  },
-  {
-    path: '/bakery/cake/:id',
-    name: 'Cake',
-    component: Cake
+    name: 'BakeryProducts',
+    component: BakeryProducts,
   },
   {
     path: '/profile',
@@ -86,8 +88,23 @@ const routes = [
         path: 'surprise',
         name: 'Surprise',
         component: MySurprise
-      },
+      },    
+      {
+        path: '/addproduct',
+        name: 'AddProduct',
+        component: AddProduct
+      }
     ]
+  },
+  {
+    path: '/checkbaker',
+    name: 'checkBaker',
+    component: CheckBaker
+  },
+  {
+    path: '/myorder',
+    name: 'Order',
+    component: Order
   }
 ]
 

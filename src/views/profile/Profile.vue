@@ -5,11 +5,15 @@
     </div>
     <div class="container-group">
       <div class="nav-profile">
-        <div class="profile-grid" v-for="(router, index) in routers" :key="index" @click="navAnimation()">
+        <div
+          class="profile-grid"
+          v-for="(router, index) in routers"
+          :key="index"
+          @click="navAnimation()"
+        >
           <router-link :to="{ name: router.name }" class="option-grid">
             <div class="icon">
-              <div class="svg">
-              </div>
+              <div class="svg"></div>
             </div>
             <div class="desc">
               <p>{{ router.text }}</p>
@@ -21,22 +25,19 @@
         <router-view></router-view>
       </div>
     </div>
-    
   </div>
 </template>
 
 <script>
-
-import Animation from '@/js/animation.js'
+import Animation from "@/js/animation.js";
 
 export default {
   name: "Profile",
   data() {
     return {
-      n: 0,
       active: Boolean,
       menu: Boolean,
-      routers: [
+      routersCustomer: [
         {
           name: "Privacy",
           icon: "icon-user-private",
@@ -58,25 +59,62 @@ export default {
           text: "Tengo un Negocio",
         },
         {
-          name: "AddCard",
-          icon: "icon-card-add",
-          text: "Mis Tarjetas",
-        },
-        {
           name: "AddLocation",
           icon: "icon-gps",
           text: "Mis Ubicaciones",
         },
       ],
+      routersBaker: [
+        {
+          name: "Privacy",
+          icon: "icon-user-private",
+          text: "Datos Personales",
+        },
+        {
+          name: "MyOrder",
+          icon: "icon-order",
+          text: "Mis Pedidos",
+        },
+        {
+          name: "AddCard",
+          icon: "icon-card-add",
+          text: "Mis Tarjetas",
+        },
+        {
+          name: "AddProduct",
+          icon: "icon-gps",
+          text: "Mi tienda",
+        },
+      ],
+      routers: [],
+      loggedInCustomer: Boolean,
+      loggedInBaker: Boolean,
     };
   },
   methods: {
+    isloggedIn() {
+      this.loggedInCustomer = this.$store.state.AuthCustomer.status.loggedIn;
+      this.loggedInBaker = this.$store.state.AuthBaker.status.loggedIn;
+      if (this.loggedInCustomer || this.loggedInBaker) {
+        if (this.loggedInCustomer) {
+          this.routers = this.routersCustomer;
+        } else if (this.loggedInBaker) {
+          this.routers = this.routersBaker;
+        }
+      } else {
+        this.$router.push({ name: "Home" });
+      }
+    },
     render() {
       let localdata = this;
       const render_width = window.matchMedia("(max-width: 1200px)");
       function render(media) {
         if (media.matches) {
-          localdata.menu = Animation.LeftRightDisplay('nav-profile', 'sub-profile', localdata.menu);
+          localdata.menu = Animation.LeftRightDisplay(
+            "nav-profile",
+            "sub-profile",
+            localdata.menu
+          );
           localdata.active = true;
         } else {
           localdata.menu = true;
@@ -86,17 +124,21 @@ export default {
       render(render_width);
       render_width.addListener(render);
     },
-    navAnimation(){
+    navAnimation() {
       let localdata = this;
-      if(this.active === true){
-        localdata.menu = Animation.LeftRightDisplay('nav-profile', 'sub-profile', localdata.menu);
+      if (this.active === true) {
+        localdata.menu = Animation.LeftRightDisplay(
+          "nav-profile",
+          "sub-profile",
+          localdata.menu
+        );
       }
-    }
+    },
   },
   mounted() {
+    this.isloggedIn();
     this.render();
     this.navAnimation();
-    
   },
 };
 </script>
@@ -129,13 +171,13 @@ div.container-group div.nav-profile {
 div.nav-profile div.profile-grid a.option-grid {
   display: grid;
   background: var(--primary-inten);
-  grid-template: 
+  grid-template:
     "icon desc" 70px/
     50px auto;
   z-index: 15;
 }
 
-div.nav-profile div.profile-grid a.option-grid div.icon{
+div.nav-profile div.profile-grid a.option-grid div.icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -143,13 +185,13 @@ div.nav-profile div.profile-grid a.option-grid div.icon{
   grid-area: icon;
 }
 
-div.nav-profile div.profile-grid a.option-grid div.icon div.svg{
+div.nav-profile div.profile-grid a.option-grid div.icon div.svg {
   background: var(--default);
   width: 50px;
   height: 50px;
 }
 
-div.nav-profile div.profile-grid a.option-grid div.desc{
+div.nav-profile div.profile-grid a.option-grid div.desc {
   margin-left: 8px;
   font-size: 1.2rem;
   display: flex;
@@ -159,17 +201,17 @@ div.nav-profile div.profile-grid a.option-grid div.desc{
   grid-area: desc;
 }
 
-div.nav-profile div.profile-grid a.option-grid div.desc p{
+div.nav-profile div.profile-grid a.option-grid div.desc p {
   margin-left: 5px;
 }
 
-div.container-group div.sub-profile{
+div.container-group div.sub-profile {
   margin: 0 auto;
   flex: 2;
 }
 
 @media (min-width: 1200px) {
-  div.nav-profile div.profile-grid a.option-grid:hover{
+  div.nav-profile div.profile-grid a.option-grid:hover {
     background: var(--primary);
     transform: translateX(10px);
     transition: all 0.5s ease;
@@ -177,7 +219,6 @@ div.container-group div.sub-profile{
 }
 
 @media (max-width: 1200px) {
-
   div.profile-title {
     text-align: center;
   }
@@ -187,7 +228,7 @@ div.container-group div.sub-profile{
     margin: 0;
   }
 
-  div.container-show{
+  div.container-show {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -195,7 +236,7 @@ div.container-group div.sub-profile{
     cursor: pointer;
   }
 
-  div.container-show button.show{
+  div.container-show button.show {
     width: 50px;
     height: 50px;
     background: var(--second);
@@ -212,25 +253,24 @@ div.container-group div.sub-profile{
     z-index: 8;
   }
 
-  div.container-group div.nav-profile div.profile-grid{
+  div.container-group div.nav-profile div.profile-grid {
     row-gap: 0;
   }
 
-  div.container-group div.sub-profile{
+  div.container-group div.sub-profile {
     width: 100%;
   }
 }
 
 @media (max-width: 400px) {
-
-  div.nav-profile div.profile-grid a.option-grid div.icon div.svg{
+  div.nav-profile div.profile-grid a.option-grid div.icon div.svg {
     width: 40px;
     height: 40px;
   }
 
-  div.nav-profile div.profile-grid a.option-grid div.desc{
-  font-size: 1rem;
-  font-family: Poppins-Bold;
+  div.nav-profile div.profile-grid a.option-grid div.desc {
+    font-size: 1rem;
+    font-family: Poppins-Bold;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="login-desc">
-      <h3>Bienvenido a su Login</h3>
+      <h3>Bienvenido Repostero</h3>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis
         condimentum velit. Praesent sed mauris a ipsum interdum aliquam ut vel
@@ -10,13 +10,10 @@
     </div>
     <div class="login-card">
       <div class="login-action">
-        <input placeholder="Ingrese su usuario" v-model="customer.username" />
+        <input placeholder="Ingrese su usuario" v-model="baker.username" />
       </div>
       <div class="login-action">
-        <input
-          placeholder="Ingrese su contraseña"
-          v-model="customer.password"
-        />
+        <input placeholder="Ingrese su contraseña" v-model="baker.password" />
       </div>
       <div class="login-action invalid" v-if="invalid === true">
         <p class="invalid">Credenciales invalidas</p>
@@ -43,10 +40,10 @@ import Loading from "../../components/Loading.vue";
 
 export default {
   components: { Loading },
-  name: "Login",
+  name: "LoginBaker",
   data() {
     return {
-      customer: {
+      baker: {
         username: "",
         password: "",
       },
@@ -56,7 +53,7 @@ export default {
   },
   computed: {
     loggedIn() {
-      return this.$store.state.AuthCustomer.status.loggedIn;
+      return this.$store.state.AuthBaker.status.loggedIn;
     },
   },
   methods: {
@@ -67,11 +64,11 @@ export default {
     },
     authentication() {
       this.loading = true;
-      if (this.customer.username && this.customer.password) {
-        this.$store.dispatch("AuthCustomer/login", this.customer).then(
-          (customer) => {
+      if (this.baker.username && this.baker.password) {
+        this.$store.dispatch("AuthBaker/login", this.baker).then(
+          (baker) => {
             console.log("Logged In");
-            console.log(customer);
+            console.log(baker);
             this.$router.go({ name: "Home" });
             this.loading = false;
           },

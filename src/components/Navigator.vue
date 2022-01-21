@@ -14,13 +14,30 @@
       <div class="routers">
         <div class="nav-router">
           <div class="router" @click="activeNav()">
-            <router-link :to="{ name: router.name }" v-for="(router, index) in routers" :key="index">
+            <router-link
+              :to="{ name: router.name }"
+              v-for="(router, index) in routers"
+              :key="index"
+            >
               <div class="nav-grid">
                 <div class="nav-icon">
-                  <img/>
+                  <img />
                 </div>
                 <div class="nav-desc">
                   <p>{{ router.desc }}</p>
+                </div>
+              </div>
+            </router-link>
+            <router-link
+              v-if="loggedInCustomer === true || loggedInBaker === true"
+              to="/"
+            >
+              <div class="nav-grid" @click="logout">
+                <div class="nav-icon">
+                  <img />
+                </div>
+                <div class="nav-desc">
+                  <p>Cerrar Sesion</p>
                 </div>
               </div>
             </router-link>
@@ -32,8 +49,7 @@
 </template>
 
 <script>
-
-import Animation from '@/js/animation.js'
+import Animation from "@/js/animation.js";
 
 export default {
   name: "NavBar",
@@ -43,21 +59,76 @@ export default {
       active: Boolean,
       signin: true,
       routers: [],
+      loggedInCustomer: false,
+      loggedInBaker: false,
+      role: String,
     };
   },
   methods: {
-    initRouter() {
-      let localdata = this;
-      if (this.signin === true) {
-        localdata.routers = [
-          { name: "Privacy", desc: "Perfil", img: "perifl" },
-          { name: "Bakery", desc: "Pastelerias", img: "perifl" },
-          { name: "SignUp", desc: "Cerrar Sesion", img: "perifl" },
+    logout() {
+      if (this.loggedInCustomer) {
+        this.$store.dispatch("AuthCustomer/logout").then(
+          () => {
+            this.loggedInCustomer = false;
+            this.isloggedIn();
+          },
+          () => {
+            console.log("No cerro sesion");
+          }
+        );
+      } else if (this.loggedInBaker) {
+        this.$store.dispatch("AuthBaker/logout").then(
+          () => {
+            this.loggedInBaker = false;
+            this.isloggedIn();
+          },
+          () => {
+            console.log("No cerro sesion");
+          }
+        );
+      }
+    },
+    /*
+        var token;
+        if (this.loggedInCustomer)
+          token = this.$store.state.AuthCustomer.customer.token;
+        else if (this.loggedInBaker)
+          token = this.$store.state.AuthBaker.baker.token;
+        var base64Payload = token.split(".")[1];
+        var payload = Buffer.from(base64Payload, "base64");
+        var dataToken = JSON.parse(payload.toString());
+        this.role = dataToken.role; */
+    isloggedIn() {
+      this.loggedInCustomer = this.$store.state.AuthCustomer.status.loggedIn;
+      this.loggedInBaker = this.$store.state.AuthBaker.status.loggedIn;
+
+      if (this.loggedInCustomer || this.loggedInBaker) {
+        this.routers = [
+          {
+            name: "Privacy",
+            desc: "Perfil",
+            img: "perifl",
+            direct: "routerProfile",
+          },
+          {
+            name: "Bakery",
+            desc: "Pastelerias",
+            img: "perifl",
+            direct: "",
+          },
         ];
+        if (this.loggedInCustomer)
+          this.routers.push({
+            name: "Order",
+            desc: "Carrito",
+            img: "perifl",
+            direct: "routerProfile",
+          });
       } else {
-        localdata.routers = [
-          { name: "SignIn", desc: "Registrarse", img: "perifl" },
-          { name: "SignUp", desc: "Ingresar", img: "perifl" },
+        this.routers = [
+          { name: "Bakery", desc: "Pastelerias", img: "perifl" },
+          { name: "SignUp", desc: "Registrarse", img: "perifl" },
+          { name: "SignIn", desc: "Ingresar", img: "perifl" },
         ];
       }
     },
@@ -67,7 +138,11 @@ export default {
       function render(media) {
         if (media.matches) {
           localdata.active = true;
-          localdata.menu = Animation.LeftRight('nav-router', 'nav-bar', localdata.menu);
+          localdata.menu = Animation.LeftRight(
+            "nav-router",
+            "nav-bar",
+            localdata.menu
+          );
         } else {
           localdata.active = false;
           localdata.menu = true;
@@ -78,24 +153,31 @@ export default {
     },
     activeNav() {
       let localdata = this;
-      if(localdata.active == true){
-        localdata.menu = Animation.LeftRight('nav-router', 'nav-bar', localdata.menu);
+      if (localdata.active == true) {
+        localdata.menu = Animation.LeftRight(
+          "nav-router",
+          "nav-bar",
+          localdata.menu
+        );
       }
     },
-    closeNav(){
+    closeNav() {
       let localdata = this;
-      if(localdata.menu == true){
-        localdata.menu = Animation.LeftRight('nav-router', 'nav-bar', localdata.menu);
+      if (localdata.menu == true) {
+        localdata.menu = Animation.LeftRight(
+          "nav-router",
+          "nav-bar",
+          localdata.menu
+        );
       }
-    }
+    },
   },
   mounted() {
-    this.initRouter();
+    this.isloggedIn();
     this.render();
   },
 };
 </script>
-
 
 <style>
 a:link {
@@ -172,6 +254,7 @@ div.nav-option div.nav-router div.router {
 }
 
 div.nav-option div.nav-router div.nav-grid {
+  height: 100%;
   display: grid;
   grid-template:
     "icon desc" auto/
@@ -202,12 +285,12 @@ div.nav-router div.nav-grid div.nav-desc {
   font-size: 1.1rem;
 }
 
-div.nav-router{
+div.nav-router {
   height: 100%;
 }
 
-div.nav-router a div.nav-grid div.nav-desc p::after{
-  content: '';
+div.nav-router a div.nav-grid div.nav-desc p::after {
+  content: "";
   display: block;
   width: 0px;
   height: 2px;
@@ -216,25 +299,24 @@ div.nav-router a div.nav-grid div.nav-desc p::after{
   border-radius: 3px;
 }
 
-div.nav-router a:hover div.nav-grid div.nav-desc p{
+div.nav-router a:hover div.nav-grid div.nav-desc p {
   transform: translateY(-2px);
   transition: all 0.5s;
 }
 
-div.nav-router a:hover div.nav-grid div.nav-desc p::after{
+div.nav-router a:hover div.nav-grid div.nav-desc p::after {
   width: 100%;
   transition: all 0.3s;
 }
 
 @media (max-width: 600px) {
-
   div.nav-bar > div.nav-option > div.nav-stack {
     display: flex;
     flex-direction: column;
     padding: 0px 20px;
   }
 
-  div.routers{
+  div.routers {
     display: block !important;
     width: 100%;
     height: 0px !important;
@@ -256,37 +338,37 @@ div.nav-router a:hover div.nav-grid div.nav-desc p::after{
   div.nav-option div.nav-router div.nav-grid {
     display: grid;
     grid-template:
-      "icon desc" 80px/
+      "icon desc" 80px /
       auto auto;
     padding: 0 2em;
   }
 
-  div.nav-option div.nav-router div.nav-grid div.nav-desc{
+  div.nav-option div.nav-router div.nav-grid div.nav-desc {
     color: var(--default);
     font-size: 1rem;
   }
 
-  div.nav-option div.nav-router div.nav-grid div.nav-icon img{
+  div.nav-option div.nav-router div.nav-grid div.nav-icon img {
     width: 35px;
     height: 35px;
     margin-right: 20px;
     background: var(--default);
   }
 
-  div.nav-option div.nav-router div.router{
+  div.nav-option div.nav-router div.router {
     background: var(--primary);
     width: 100%;
     flex-direction: column;
   }
 
-  div.nav-option div.nav-router div.router a{
+  div.nav-option div.nav-router div.router a {
     height: auto;
     align-items: start;
     flex-direction: column;
   }
 
-  div.nav-option div.nav-router div.router a::after{
-    content: '';
+  div.nav-option div.nav-router div.router a::after {
+    content: "";
     display: block;
     height: 3px;
     width: 90%;
@@ -295,7 +377,7 @@ div.nav-router a:hover div.nav-grid div.nav-desc p::after{
     border-radius: 3px;
   }
 
-  div.nav-router a div.nav-grid div.nav-desc p::after{
+  div.nav-router a div.nav-grid div.nav-desc p::after {
     display: none;
   }
 }

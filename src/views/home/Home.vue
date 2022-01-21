@@ -10,7 +10,8 @@
             </div>
             <div class="card-space">
                 <div class="space"></div>
-                <div class="img"></div>
+                <div class="img">
+                </div>
                 <div class="space"></div>
             </div>
             <div class="gallery">
@@ -102,10 +103,10 @@ div.card-principal div.card-desc input{
     font-family: Poppins-Regular;
     margin: 20px 0px;
     width: 70%;
-    height: 35px;
-    padding: 3px 10px;
+    padding: 0.5em 0.6em;
     border-radius: 20px;
-    font-size: 16px;
+    font-size: 1rem;
+    background: var(--default);
 }
 
 div.card-space{

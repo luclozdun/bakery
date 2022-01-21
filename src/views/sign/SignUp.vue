@@ -1,212 +1,321 @@
 <template>
-<div class="login">
-    <div class="login-desc">
-        <h3>Bienvenido a su Login</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis condimentum velit. Praesent sed mauris a ipsum interdum aliquam ut vel tortor.</p>
+  <div class="signup">
+    <div class="signup-social">
+      <div class="singup-center">
+        <div class="signup-social-title">
+          <h3>Bienvenido al Registro</h3>
+        </div>
+        <div class="signup-social-desc">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis
+            condimentum velit. Praesent sed mauris a ipsum interdum aliquam ut
+            vel tortor.
+          </p>
+        </div>
+        <div class="signup-social-action">
+          <button class="facebook">Facebook</button>
+        </div>
+        <div class="signup-social-action">
+          <button class="google">Google</button>
+        </div>
+        <div class="signup-social-action">
+          <button class="outlook">Outlook</button>
+        </div>
+      </div>
     </div>
-    <div class="login-card">
-        <div class="login-action">
-            <input placeholder="Ingrese su usuario" v-model="login.username">
-        </div>
-        <div class="login-action">
-            <input placeholder="Ingrese su contraseña" v-model="login.password">
-        </div>
-        <div class="login-action invalid" v-if="invalid === true">
-          <p>Credenciales invalidas</p>
-        </div>
-        <div class="login-action">
-            <button class="login" @click="authentication()">Iniciar Sesion</button>
-        </div>
-        <div class="login-action">
-            <p>¿Olvidaste tu contraseña?</p>
-        </div>
-        <div class="login-action">
-            <hr>
-        </div>
-        <div class="login-action">
-            <button class="singup">Registrate</button>
-        </div>
+    <div class="signup-normal" id="signup-normal">
+      <div class="signup-action">
+        <h1>Register</h1>
+      </div>
+      <div class="signup-action">
+        <input
+          placeholder="Nombre"
+          v-model="customer.name"
+          required
+          maxlength="15"
+        />
+      </div>
+      <div class="signup-action">
+        <input
+          placeholder="Usuario"
+          v-model="customer.username"
+          required
+          maxlength="20"
+        />
+      </div>
+      <div class="signup-action">
+        <input
+          placeholder="Correo"
+          v-model="customer.email"
+          type="email"
+          required
+          maxlength="40"
+        />
+      </div>
+      <div class="signup-action">
+        <input
+          placeholder="Numero"
+          v-model="customer.number"
+          required
+          minlength="9"
+          maxlength="9"
+        />
+      </div>
+      <div class="signup-action">
+        <input
+          placeholder="Contraseña"
+          v-model="customer.password"
+          type="password"
+          required
+          maxlength="20"
+        />
+      </div>
+      <div class="signup-action">
+        <input type="date" required v-model="brithday" />
+      </div>
+      <div class="signup-action">
+        <button class="signup" @click="create()">Crear Cuenta</button>
+      </div>
     </div>
-    <loading v-if="loading===true"></loading>
-</div>
-    
+  </div>
 </template>
 
 <script>
-import CustomerService from '@/service/user/CustomerService'
-import Loading from '../../components/Loading.vue';
+import moment from "moment";
 
 export default {
-  components: { Loading },
-  name: "Login",
+  name: "SignIn",
   data() {
     return {
-      login: {
-        username: '',
-        password: ''        
+      customer: {
+        name: "",
+        username: "",
+        number: "",
+        password: "",
+        email: "",
+        brithday: Date,
+        image: "",
       },
-      loading: false,
-      invalid: false
-    }
+      brithday: Date,
+    };
   },
   methods: {
-    authentication(){
-      this.loading = true
-      CustomerService.authenticate(this.login).then(() => {
-        this.loading=false
-        console.log(this.loading)
-      }).catch(() => {
-        this.loading=false
-        this.invalid = true
-      })
-    }
-  }
+    create() {
+      var asd = new Date(this.brithday);
+      this.customer.brithday = moment(asd).format("DD/MM/YYYY");
+      this.$store.dispatch("AuthCustomer/register", this.customer).then(
+        () => {
+          console.log("Registed");
+          this.$router.push({ name: "SignIn" });
+        },
+        (error) => console.log(error)
+      );
+    },
+  },
 };
 </script>
 
 <style>
-input:not(:focus):not(:placeholder-shown):invalid  ~input[type=date]{
-    border: 1px solid red !important;
-}
-
-div.login {
-  width: 900px;
-  margin: 100px auto;
-  display: flex;
-  font-family: "Roboto";
-}
-
-div.login-desc {
-  flex: 1;
-  margin-right: 25px;
-}
-
-div.login-desc > h3 {
-  color: var(--primary-inten);
-  text-align: center;
-  font-size: 2.5rem;
-  margin: 1.5em 0 0 0;
-  font-family: Poppins-Bold;
-}
-
-div.login-desc > p {
-  color: var(--primary-subinten);
-  text-align: justify;
-  font-size: 1.1rem;
-  margin: 4em 0;
-  font-family: Poppins-Regular;
-}
-
-div.login-card{
-  background: var(--background-opacity-aux);
-  padding: 10px;
+div.signup {
+  width: 1000px;
+  margin: 100px auto 100px auto;
   border-radius: 20px;
-  flex: 1;
+  display: flex;
 }
 
-div.login-card > div.login-action {
-  width: 100%;
+div.singup-center {
+  flex: 1;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
 
-div.login-card div.login-action.invalid p{
-  color: rgb(167, 13, 13);
-  margin: 25px 0 0 0;
-  text-decoration: none;
+div.signup-social-title {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  font-size: 2.3rem;
+  margin: 1em 0px;
+  font-family: Poppins-Bold;
+  text-align: center;
+  color: var(--primary-inten);
 }
 
-div.login-card > div.login-action > input,
-div.login-card > div.login-action > button {
-  border-radius: 10px;
+div.signup-social-desc {
+  margin: 1.4rem 0;
+  display: flex;
+  text-align: justify;
+  font-family: Poppins-Regular;
+  color: var(--primary-subinten);
+  font-size: 1.1rem;
 }
 
-div.login-card > div.login-action > input::placeholder{
+div.signup-social {
+  flex: 1;
+  align-items: center;
+  display: flex;
+  margin: 0px 20px;
+}
+
+div.signup-social > div.singup-center > div.signup-social-action {
+  width: 100%;
+}
+
+div.signup-social > div.singup-center > div.signup-social-action > button {
+  font-size: 1rem;
+  padding: 0.8em 0;
+  margin-top: 1.2em;
+  color: var(--default);
+  border: none;
+  cursor: pointer;
+  border-radius: 7px;
+  width: 90%;
+}
+
+div.signup-social
+  > div.singup-center
+  > div.signup-social-action
+  > button.facebook {
+  background: #3b5998;
+}
+
+div.signup-social
+  > div.singup-center
+  > div.signup-social-action
+  > button.google {
+  color: #1778f2;
+  background: white;
+  border: 2px solid #1778f2;
+}
+
+div.signup-social
+  > div.singup-center
+  > div.signup-social-action
+  > button.outlook {
+  background: #1778f2;
+}
+
+div.signup-social
+  > div.singup-center
+  > div.signup-social-action
+  > button.facebook:active {
+  background: #5473b6;
+}
+
+div.signup-social
+  > div.singup-center
+  > div.signup-social-action
+  > button.google:active {
+  background: #1778f2;
+  color: white;
+}
+
+div.signup-social
+  > div.singup-center
+  > div.signup-social-action
+  > button.outlook:active {
+  background: #60a7ff;
+}
+
+div.signup-normal {
+  flex: 1;
+  background: var(--background-opacity-aux);
+  border-radius: 20px;
+}
+
+div.signup-normal > div.signup-action,
+div.signup-social > div.singup-center > div.signup-social-action {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
+div.signup-normal > input:not(:focus):not(:placeholder-shown):invalid {
+  border: 1px solid red !important;
+}
+
+div.signup-normal > div.signup-action > h1 {
+  font-size: 2.3rem;
+  margin: 1em 0;
+  font-family: Poppins-Medium;
+  color: var(--primary-inten);
+}
+
+div.signup-normal > div.signup-action > input::placeholder {
   color: var(--placeholder-second);
 }
 
-div.login-card > div.login-action > input {
-  color: var(--second);
+div.signup-normal
+  > input[type="date"]:not(:focus):not(:placeholder-shown):invalid {
+  color: var(--placeholder-second);
+}
+
+div.signup-normal > div.signup-action > input {
   background: var(--default);
-  flex: 0.8;
-  padding: 0.6em;
-  border-radius: 10px;
   border: 1px solid var(--input-box);
-  margin-top: 30px;
+  color: var(--second);
+  flex: 0.8;
+  margin: 0.8em 0;
+  padding: 0.5em 0.5em;
+  border-radius: 5px;
   font-size: 1.1rem;
   font-family: Poppins-Bold;
 }
 
-div.login-card > div.login-action > button.login {
-  flex: 0.8;
-  padding: 0.5em 0.4em;
-  margin: 1.5em 0 0.9em 0;
-  font-size: 1.2rem;
-  border: none;
-  background: var(--succesful-second);
-  color: var(--default);
-  cursor: pointer;
-}
-
-div.login-card > div.login-action > button.login:active {
-  background: var(--succesful-second-active);
-}
-
-div.login-card > div.login-action > hr {
-  width: 80%;
-  border: 1px solid var(--second);
-  border-radius: 1px;
-  margin-top: 20px;
-}
-
-div.login-card > div.login-action > p {
-  margin-top: 0.5em;
-  color: var(--text-aux);
-  font-size: 1rem;
-  text-decoration: underline;
-  cursor: pointer;
-  font-family: Poppins-Light;
-}
-
-div.login-card > div.login-action > p:hover {
-  color: var(--text-aux-active);
-}
-
-div.login-card > div.login-action > button.singup {
-  flex: 0.5;
-  padding: 0.6em 0.5em;
-  margin: 1em 0 0.5em 0;
+div.signup-normal > div.signup-action > button.signup {
+  padding: 0.6em 0.4em;
+  margin: 0.8em 0 0.9em 0;
   font-size: 1.2rem;
   background: var(--succesful);
   border: none;
-  color: var(--default);
+  color: white;
   cursor: pointer;
+  flex: 0.8;
+  border-radius: 10px;
 }
 
-div.login-card > div.login-action > button.singup:active {
+div.signup-normal > div.signup-action > button.signup:active {
   background: var(--succesful-active);
 }
 
 @media screen and (max-width: 1024px) {
-
-  div.login-desc > h3 {
-    margin: 5px 0px;
-  }
-
-  div.login-desc > p{
-    margin: 25px 0px;
-  }
-
-  div.login {
+  div.signup {
     width: 90%;
     flex-direction: column;
   }
-  div.login-desc {
-    margin: 0px;
+
+  div.signup-social-title {
+    display: flex;
+    justify-content: center;
+    font-size: 35px;
+    margin: 5px 0px;
   }
-  div.login-card {
-    padding: 10px 0px 10px 0px;
-    border: none;
+
+  div.signup-social-desc {
+    text-align: center;
+    margin: 25px 0px;
+    font-size: 18px;
+  }
+
+  div.signup > div.signup-action > div.date > select {
+    width: 35px;
+  }
+
+  div.signup-normal {
+    margin: 20px 0px;
+  }
+
+  div.signup-normal > div.signup-action > h1 {
+    font-size: 30px;
+  }
+
+  div.signup-normal > div.signup-action > div.date > select {
+    width: 50px;
+  }
+
+  div.signup-social > div.singup-center > div.signup-social-action > button {
+    width: 100%;
   }
 }
 </style>

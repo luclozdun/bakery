@@ -1,0 +1,54 @@
+
+<div class="food">
+          <div class="title">Pie</div>
+          <div class="products">
+            <div class="card">
+              <div class="img"></div>
+              <div class="cook">
+                <div class="c-title">
+                  <p>Pie</p>
+                </div>
+                <div class="c-cook">
+                  <p>Manzana</p>
+                </div>
+                <div class="c-cook">
+                  <p>Mediano</p>
+                </div>
+                <div class="c-cook">
+                  <p>Circular</p>
+                </div>
+                <div class="c-cook green">
+                  <p>S/ 85.00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<div class="sidebar" v-if="this.sidebar === true" id="sidebar">
+        <div class="filter-container">
+          <div class="filter">
+            <p>Empanadas</p>
+          </div>
+          <div class="filter">
+            <p>Tortas</p>
+          </div>
+          <div class="filter">
+            <p>Bocaditos</p>
+          </div>
+          <div class="filter">
+            <p>Tartas</p>
+          </div>
+          <div class="filter">
+            <p>Meriendas</p>
+          </div>
+          <div class="filter">
+            <p>Kekes</p>
+          </div>
+          <div class="filter">
+            <p>Panes</p>
+          </div>
+          <div class="filter">
+            <p>Butidos</p>
+          </div>
+        </div>
+      </div>
