@@ -103,7 +103,7 @@ export default {
     create() {
       var asd = new Date(this.brithday);
       this.customer.brithday = moment(asd).format("DD/MM/YYYY");
-      this.$store.dispatch("AuthCustomer/register", this.customer).then(
+      this.$store.dispatch("Authenticate/register", this.customer).then(
         () => {
           console.log("Registed");
           this.$router.push({ name: "SignIn" });

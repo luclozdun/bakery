@@ -1,25 +1,24 @@
 <template>
   <div id="app">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <div>
-      <NavBar/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <div>
+      <NavBar />
       <div class="app-route">
-        <router-view/>
+        <router-view />
       </div>
-  </div>
+    </div>
   </div>
 </template>
 
-
 <script lang="ts">
-import NavBar from './components/Navigator.vue'
+import NavBar from "./components/Navigator.vue";
 
 export default {
   name: "App",
   components: {
-    NavBar
-  }
+    NavBar,
+  },
 };
 </script>
 
@@ -32,7 +31,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif; /* this was it */
+  font-family: "Avenir", Helvetica, Arial, sans-serif; /* this was it */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

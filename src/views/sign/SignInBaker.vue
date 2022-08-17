@@ -24,6 +24,9 @@
       <div class="login-action">
         <p>¿Olvidaste tu contraseña?</p>
       </div>
+      <div class="login-action" @click="customer">
+        <p>Ingresar como usuario</p>
+      </div>
       <div class="login-action">
         <hr />
       </div>
@@ -53,7 +56,7 @@ export default {
   },
   computed: {
     loggedIn() {
-      return this.$store.state.AuthBaker.status.loggedIn;
+      return this.$store.state.Authenticate.status.loggedIn;
     },
   },
   methods: {
@@ -65,7 +68,7 @@ export default {
     authentication() {
       this.loading = true;
       if (this.baker.username && this.baker.password) {
-        this.$store.dispatch("AuthBaker/login", this.baker).then(
+        this.$store.dispatch("Authenticate/loginBaker", this.baker).then(
           (baker) => {
             console.log("Logged In");
             console.log(baker);
@@ -79,6 +82,9 @@ export default {
           }
         );
       }
+    },
+    customer() {
+      this.$router.push({ name: "SignIn" });
     },
   },
   mounted() {

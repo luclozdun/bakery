@@ -1,6 +1,5 @@
 <template>
   <div class="container-product">
-    <div class="sidebar" v-if="sidebar"></div>
     <div class="product-grid">
       <div class="header"></div>
       <div class="main">
@@ -8,7 +7,6 @@
           <div class="title">Tortas</div>
           <div class="products">
             <div class="card" v-for="cake in cakes" :key="cake.id">
-              <button @click="asd(cake)">asd{{ cake.id }}</button>
               <div class="img"></div>
               <div class="cook">
                 <div class="c-title">
@@ -61,6 +59,37 @@
                 <div class="c-cook count accept">
                   <p>S/ {{ cake.price }}</p>
                 </div>
+                <template v-if="adm === false">
+                  <div
+                    class="c-cook count add"
+                    @click="add(cake)"
+                    v-if="cake.quantify !== 0 && cake.buy === false"
+                  >
+                    <p>Agregar</p>
+                  </div>
+                  <div
+                    class="c-cook count delete"
+                    @click="remove(cake)"
+                    v-if="cake.buy === true"
+                  >
+                    <p>Eliminar</p>
+                  </div>
+                </template>
+                <template v-else>
+                  <div
+                    class="c-cook count admin"
+                    v-if="adm === true && cake.quantify !== 0"
+                  >
+                    <p>Con Stock</p>
+                  </div>
+                </template>
+
+                <div
+                  class="c-cook count add no"
+                  v-if="cake.quantify === 0 && cake.buy == false"
+                >
+                  <p>Agotado</p>
+                </div>
               </div>
             </div>
           </div>
@@ -79,15 +108,21 @@ export default {
     return {
       pies: [],
       cakes: [],
+      dremove: {
+        bakerId: 0,
+        productId: 0,
+      },
+      dictionary: {},
     };
   },
   props: {
     bakerId: Number,
     crud: Boolean,
-    sidebar: Boolean,
+    adm: Boolean,
   },
   methods: {
-    asd(item) {
+    add(item) {
+      item.buy = true;
       var cake = {
         type: item.typeCake.name,
         id: item.id,
@@ -101,24 +136,42 @@ export default {
         bakerId: this.bakerId,
       };
 
-      this.$store.dispatch("OrderProduct/add", addCake).then(
-        () => {
-          console.log("Se agrego");
-        },
+      this.$store.dispatch("OrderProduct/addProduct", addCake).then(
+        () => {},
         (error) => console.log(error)
       );
     },
-    getAllCakes() {
+    dictionaryCake() {
+      var dictionary = {};
+      var orders = this.$store.state.OrderProduct.orders;
+      if (orders !== []) {
+        orders.forEach((o) => {
+          o.products.listcakes.forEach((lc) => {
+            dictionary[lc] = lc;
+          });
+        });
+      }
+      return dictionary;
+    },
+    initialize() {
       CakeService.getAllByBakerId(this.bakerId).then(
         (response) => {
-          this.cakes = response.data;
-          console.log(response.data);
+          this.dictionary = this.dictionaryCake();
+          var cakes = response.data;
+          cakes.forEach((cake) => {
+            if (cake.id in this.dictionary) {
+              cake.buy = true;
+              return;
+            }
+            cake.buy = false;
+          });
+          this.cakes = cakes;
         },
         (error) => console.log(error)
       );
     },
     refreshCakes() {
-      this.getAllCakes();
+      this.initialize();
     },
     deleteCake(id) {
       CakeService.deleteCake(id).then(
@@ -131,9 +184,18 @@ export default {
     update(id, item) {
       this.$emit("updateCake", id, item);
     },
+    remove(cake) {
+      cake.buy = false;
+      this.dremove.bakerId = Number(this.bakerId);
+      this.dremove.productId = Number(cake.id);
+      this.$store.dispatch("OrderProduct/remove", this.dremove).then(
+        () => {},
+        (error) => console.log(error)
+      );
+    },
   },
   mounted() {
-    this.getAllCakes();
+    this.initialize();
   },
 };
 </script>
@@ -141,19 +203,12 @@ export default {
 <style>
 div.container-product {
   margin: 0 auto;
-  width: 90%;
+  width: 100%;
   display: flex;
 }
 
 div.container-product div.product-grid {
   width: 100%;
-}
-
-div.container-product div.sidebar {
-  height: 500px;
-  width: 250px;
-  background: red;
-  margin-right: 25px;
 }
 
 div.product-grid div.main div.food div.title {
@@ -324,6 +379,20 @@ div.filter-container div.filter::after {
 
 div.filter-container div.filter:last-child::after {
   display: none;
+}
+
+div.add {
+  background: rgb(210, 61, 255) !important;
+  cursor: pointer;
+}
+
+div.add.no {
+  background: rgb(102, 102, 102) !important;
+}
+
+div.admin {
+  background: rgb(17, 182, 17) !important;
+  cursor: pointer;
 }
 
 @media (max-width: 900px) {

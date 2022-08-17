@@ -1,15 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { AuthCustomer } from '@/store/AuthCustomer'
-import { AuthBaker } from '@/store/AuthBaker'
+import { Authenticate } from '@/store/Authenticate'
 import { OrderProduct } from '@/store/OrderProduct'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    AuthCustomer,
-    AuthBaker,
+    Authenticate,
     OrderProduct
   }
 })

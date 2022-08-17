@@ -8,18 +8,22 @@
         <table>
           <div>
             <tr>
+              <th><p>Username</p></th>
+              <td>
+                <p>{{ user.username }}</p>
+              </td>
+            </tr>
+            <tr>
               <th><p>Nombre</p></th>
               <td>
                 <p>{{ user.name }}</p>
               </td>
             </tr>
             <tr>
-              <th><p>Apellido</p></th>
-              <td><p>none</p></td>
-            </tr>
-            <tr>
               <th>Contraseña</th>
-              <td>█ █ █ █ █</td>
+              <td>
+                <p>{{ user.password }}</p>
+              </td>
             </tr>
             <tr>
               <th><p>Numero Celular</p></th>
@@ -68,27 +72,27 @@
 </template>
 
 <script>
+import UserService from "@/service/security/UserService";
+import jwt_decode from "jwt-decode";
+
 export default {
   name: "Privacy",
   data() {
     return {
       user: {},
       role: String,
+      id: Number,
     };
   },
   methods: {
     initialState() {
-      var token = this.$store.state.AuthBaker.baker.token;
-      var base64Payload = token.split(".")[1];
-      var payload = Buffer.from(base64Payload, "base64");
-      var dataToken = JSON.parse(payload.toString());
-      if (dataToken.role == "BAKER") {
-        this.role = "BAKER";
-        this.user = this.$store.state.AuthBaker.baker;
-      } else if (dataToken.role == "USER") {
-        this.role = "USER";
-        this.user = this.$store.state.AuthCustomer.customer;
-      }
+      var token = this.$store.state.Authenticate.token;
+      var data = jwt_decode(token);
+      this.id = data.id;
+      this.role = data.role;
+      UserService.getUser(this.role, this.id).then((response) => {
+        this.user = response.data;
+      });
     },
   },
   mounted() {

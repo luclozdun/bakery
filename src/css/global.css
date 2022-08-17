@@ -275,6 +275,7 @@ p {
 
 .delete {
   background: #ff5a5a !important;
+  cursor: pointer;
   color: white;
 }
 

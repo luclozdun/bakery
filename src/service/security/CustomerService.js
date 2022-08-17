@@ -6,15 +6,9 @@ class CustomerService{
     }
     authenticate(data) {
         return http.post("/authentications/customer", data).then(response => {
-            if (response.data.token) {
-                console.log(`customer: ${response.data}`)
-                localStorage.setItem('customer', JSON.stringify(response.data))
-            }
+            localStorage.setItem('token', response.data)
             return response.data
         })
-    }
-    logout() {
-        localStorage.removeItem('customer')
     }
 }
 

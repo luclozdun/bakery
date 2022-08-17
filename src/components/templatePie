@@ -52,3 +52,35 @@
           </div>
         </div>
       </div>
+      ........
+
+
+
+
+      purchase_units: [
+          {
+            description: "Hola keekooya",
+            amount: {
+              value: "7",
+              currency_code: "USD",
+              breakdown: {
+                item_total: { value: "7", currency_code: "USD" },
+              },
+            },
+            items: [
+              {
+          name: "string",
+          quantify: "1",
+          unit_amount: {
+            value: "50.00",
+            currency_code: "USD"
+          }
+        },
+              {
+                name: "Discount",
+                unit_amount: { value: "4", currency_code: "USD" },
+                quantity: "1",
+              },
+            ],
+          },
+        ],

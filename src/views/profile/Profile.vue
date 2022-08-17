@@ -30,6 +30,7 @@
 
 <script>
 import Animation from "@/js/animation.js";
+import jwt_decode from "jwt-decode";
 
 export default {
   name: "Profile",
@@ -89,20 +90,27 @@ export default {
       routers: [],
       loggedInCustomer: Boolean,
       loggedInBaker: Boolean,
+      id: Number,
+      role: String,
     };
   },
   methods: {
     isloggedIn() {
-      this.loggedInCustomer = this.$store.state.AuthCustomer.status.loggedIn;
-      this.loggedInBaker = this.$store.state.AuthBaker.status.loggedIn;
-      if (this.loggedInCustomer || this.loggedInBaker) {
-        if (this.loggedInCustomer) {
-          this.routers = this.routersCustomer;
-        } else if (this.loggedInBaker) {
-          this.routers = this.routersBaker;
-        }
-      } else {
+      this.loggedInCustomer = this.$store.state.Authenticate.status.loggedIn;
+
+      if (!this.loggedInCustomer) {
         this.$router.push({ name: "Home" });
+      }
+      var token = this.$store.state.Authenticate.token;
+      var decode = jwt_decode(token);
+
+      this.id = decode.id;
+      this.role = decode.role;
+
+      if (decode.role === "CUSTOMER") {
+        this.routers = this.routersCustomer;
+      } else if (decode.role === "BAKER") {
+        this.routers = this.routersBaker;
       }
     },
     render() {

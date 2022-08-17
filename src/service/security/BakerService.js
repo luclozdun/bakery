@@ -6,15 +6,9 @@ class BakerService {
     }
     authenticate(data) {
         return http.post("/authentications/baker", data).then(response => {
-            if (response.data.token) {
-                console.log(`baker: ${response.data}`)
-                localStorage.setItem("baker", JSON.stringify(response.data))
-            }
+            localStorage.setItem('token', response.data)
             return response.data
         })
-    }
-    logout() {
-        localStorage.removeItem("baker")
     }
 }
 

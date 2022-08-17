@@ -28,6 +28,9 @@ class CakeService{
     updateCake(id, data) {
         return http.put(`/cakes/${id}`, data)
     }
+    getAllByIds(ids){
+        return http.post('/cakes/list', ids)
+    }
 }
 
 export default new CakeService()

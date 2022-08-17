@@ -9,10 +9,10 @@
           <div></div>
         </div>
         <div class="card-bakery-desc">
-          <p class="title">{{ bakery.name }}</p>
+          <p class="title">{{ bakery.nameBakery }}</p>
           <p class="desc">{{ bakery.desc }}</p>
-          <p class="desc">Costo: {Falta{ bakery.cost }}</p>
-          <p class="desc">Ubicacion: {Falta{ bakery.location }}</p>
+          <p class="desc">Costo: {{ bakery.cost }}</p>
+          <p class="desc">Ubicacion: {{ bakery.location }}</p>
           <div class="option">
             <router-link
               :to="{ name: 'BakeryProducts', params: { id: bakery.id } }"
@@ -47,7 +47,6 @@ export default {
       BakeryService.getAll().then(
         (reponse) => {
           this.bakeries = reponse.data;
-          console.log(this.bakeries);
         },
         (error) => console.log(error)
       );

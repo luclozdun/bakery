@@ -20,6 +20,7 @@ import MySurprise from '../views/profile/profile-sub/Surprise.vue'
 import CheckBaker from '../views/permissbaker/CheckBaker.vue'
 import AddProduct from '../views/profile/profile-sub/AddProduct.vue'
 import Order from '../views/order/Order.vue'
+import ImageFirebaseForm from '../views/image/ImageFirebaseForm'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/image',
+    name: 'ImageFirebaseForm',
+    component: ImageFirebaseForm
   },
   {
     path: '/login/customer',
@@ -90,7 +96,7 @@ const routes = [
         component: MySurprise
       },    
       {
-        path: '/addproduct',
+        path: 'addproduct',
         name: 'AddProduct',
         component: AddProduct
       }

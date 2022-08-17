@@ -28,10 +28,7 @@
                 </div>
               </div>
             </router-link>
-            <router-link
-              v-if="loggedInCustomer === true || loggedInBaker === true"
-              to="/"
-            >
+            <router-link v-if="loggedIn === true" to="/">
               <div class="nav-grid" @click="logout">
                 <div class="nav-icon">
                   <img />
@@ -59,50 +56,32 @@ export default {
       active: Boolean,
       signin: true,
       routers: [],
-      loggedInCustomer: false,
-      loggedInBaker: false,
+      loggedIn: false,
       role: String,
     };
   },
   methods: {
     logout() {
-      if (this.loggedInCustomer) {
-        this.$store.dispatch("AuthCustomer/logout").then(
-          () => {
-            this.loggedInCustomer = false;
-            this.isloggedIn();
-          },
-          () => {
-            console.log("No cerro sesion");
-          }
-        );
-      } else if (this.loggedInBaker) {
-        this.$store.dispatch("AuthBaker/logout").then(
-          () => {
-            this.loggedInBaker = false;
-            this.isloggedIn();
-          },
-          () => {
-            console.log("No cerro sesion");
-          }
-        );
-      }
+      this.$store.dispatch("Authenticate/logout").then(
+        () => {
+          this.loggedIn = false;
+          this.isloggedIn();
+        },
+        () => {
+          console.log("No cerro sesion");
+        }
+      );
     },
-    /*
-        var token;
-        if (this.loggedInCustomer)
-          token = this.$store.state.AuthCustomer.customer.token;
-        else if (this.loggedInBaker)
-          token = this.$store.state.AuthBaker.baker.token;
-        var base64Payload = token.split(".")[1];
-        var payload = Buffer.from(base64Payload, "base64");
-        var dataToken = JSON.parse(payload.toString());
-        this.role = dataToken.role; */
     isloggedIn() {
-      this.loggedInCustomer = this.$store.state.AuthCustomer.status.loggedIn;
-      this.loggedInBaker = this.$store.state.AuthBaker.status.loggedIn;
+      this.loggedIn = this.$store.state.Authenticate.status.loggedIn;
 
-      if (this.loggedInCustomer || this.loggedInBaker) {
+      if (this.loggedIn === false) {
+        this.routers = [
+          { name: "Bakery", desc: "Pastelerias", img: "perifl" },
+          { name: "SignUp", desc: "Registrarse", img: "perifl" },
+          { name: "SignIn", desc: "Ingresar", img: "perifl" },
+        ];
+      } else {
         this.routers = [
           {
             name: "Privacy",
@@ -116,19 +95,12 @@ export default {
             img: "perifl",
             direct: "",
           },
-        ];
-        if (this.loggedInCustomer)
-          this.routers.push({
+          {
             name: "Order",
             desc: "Carrito",
             img: "perifl",
             direct: "routerProfile",
-          });
-      } else {
-        this.routers = [
-          { name: "Bakery", desc: "Pastelerias", img: "perifl" },
-          { name: "SignUp", desc: "Registrarse", img: "perifl" },
-          { name: "SignIn", desc: "Ingresar", img: "perifl" },
+          },
         ];
       }
     },
@@ -183,7 +155,7 @@ export default {
 a:link {
   text-decoration: none;
   height: 100%;
-  z-index: 999;
+  z-index: 9;
 }
 
 div.nav-bar {
@@ -193,7 +165,7 @@ div.nav-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 9;
+  z-index: 10;
   height: 70px;
 }
 

@@ -1,24 +1,35 @@
 import CustomerService from '@/service/security/CustomerService'
+import BakerService from '@/service/security/BakerService'
+import UserService from '@/service/security/UserService'
 
-const customer = JSON.parse(localStorage.getItem('customer'))
+const token = localStorage.getItem('token')
 
-const initialState = customer ? { status: { loggedIn: true }, customer } : { status: { loggedIn: false }, customer: null }
+const initialState = token ? { status: { loggedIn: true }, token } : { status: { loggedIn: false }, token: null }
 
-export const AuthCustomer = {
+export const Authenticate = {
     namespaced: true,
     state: initialState,
     actions: {
-        login({ commit }, customer) {
-            return CustomerService.authenticate(customer).then(response => {
-                commit('loginSuccess', response)
-                return Promise.resolve(response)
+        loginCustomer({ commit }, customer) {
+            return CustomerService.authenticate(customer).then(token => {
+                commit('loginSuccess', token)
+                return Promise.resolve(token)
+            }, error => {
+                commit('loginFailure')
+                return Promise.reject(error)
+            })
+        },
+        loginBaker({ commit }, baker) {
+            return BakerService.authenticate(baker).then(token => {
+                commit('loginSuccess', token)
+                return Promise.resolve(token)
             }, error => {
                 commit('loginFailure')
                 return Promise.reject(error)
             })
         },
         logout({ commit }) {
-            CustomerService.logout()
+            UserService.logout()
             commit('logout')
         },
         register({ commit }, customer) {
@@ -32,17 +43,17 @@ export const AuthCustomer = {
         }
     },
     mutations: {
-        loginSuccess(state, customer) {
+        loginSuccess(state, token) {
             state.status.loggedIn = true
-            state.customer = customer
+            state.token = token
         },
         loginFailure(state) {
             state.status.loggedIn = false
-            state.customer = null
+            state.token = null
         },
         logout(state) {
             state.status.loggedIn = false
-            state.customer = null
+            state.token = null
         },
         registerSuccess(state) {
             state.status.loggedIn = false

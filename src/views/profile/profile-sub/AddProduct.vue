@@ -9,6 +9,7 @@
       @updateCake="update"
       :crud="true"
       :sidebar="false"
+      :adm="true"
     />
     <form-cake
       v-if="create"
@@ -23,6 +24,7 @@
 <script>
 import FormCake from "../../foods/cake/FormCake.vue";
 import Product from "../../foods/cake/Product.vue";
+import jwtDecode from "jwt-decode";
 
 export default {
   components: { Product, FormCake },
@@ -33,7 +35,9 @@ export default {
   },
   computed: {
     bakerId() {
-      return this.$store.state.AuthBaker.baker.id;
+      var token = this.$store.state.Authenticate.token;
+      var data = jwtDecode(token);
+      return data.id;
     },
   },
   methods: {

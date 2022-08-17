@@ -7,6 +7,24 @@
       <div class="card" v-if="nobakery === true">
         <input
           minlength="8"
+          placeholder="Nombre de la pasteleria"
+          required
+          v-model="profile.nameBakery"
+        />
+        <input
+          minlength="5"
+          placeholder="Costo referencial Ejm: $$$"
+          required
+          v-model="profile.cost"
+        />
+        <input
+          minlength="20"
+          placeholder="Ubicacion"
+          required
+          v-model="profile.location"
+        />
+        <input
+          minlength="8"
           maxlength="8"
           placeholder="dni"
           required
@@ -139,6 +157,7 @@
 
 <script>
 import ProfileService from "@/service/profile/ProfileService";
+import jwt_decode from "jwt-decode";
 
 export default {
   data() {
@@ -162,9 +181,11 @@ export default {
         docSanitation: "",
         permMunicipa: "",
         license: "",
+        nameBakery: "",
+        cost: "",
       },
       nobakery: false,
-      idCustomer: 0,
+      id: 0,
       idProfile: 0,
       prof: {},
       process: 0,
@@ -173,10 +194,12 @@ export default {
   },
   methods: {
     initialCustomerId() {
-      this.idCustomer = this.$store.state.AuthCustomer.customer.id;
+      var token = this.$store.state.Authenticate.token;
+      var data = jwt_decode(token);
+      this.id = data.id;
     },
     getByCustomerId() {
-      ProfileService.getByCustomer(this.idCustomer).then(
+      ProfileService.getByCustomer(this.id).then(
         (response) => {
           this.profiles.push(response.data);
           this.nobakery = false;
@@ -190,7 +213,7 @@ export default {
       );
     },
     createProfile() {
-      this.profile.customerId = this.idCustomer;
+      this.profile.customerId = this.id;
       ProfileService.create(this.profile).then(
         () => {
           this.getByCustomerId();
