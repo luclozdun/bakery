@@ -1,10 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" class="font-sans">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <div>
-      <NavBar />
-      <div class="app-route">
+    <div class="h-screen flex flex-col">
+      <div>
+        <NavBar />
+      </div>
+      <div class="h-full">
         <router-view />
       </div>
     </div>
@@ -26,14 +28,4 @@ export default {
 @import "./css/animation.css";
 @import "./css/spansvg.css";
 @import "./css/global.css";
-@import "./font/FontType.css";
-</style>
-
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif; /* this was it */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
 </style>

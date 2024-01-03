@@ -1,27 +1,19 @@
 <template>
-  <div class="container-profile">
-    <div class="container-show">
-      <button class="show" @click="navAnimation()"></button>
-    </div>
-    <div class="container-group">
-      <div class="nav-profile">
-        <div
-          class="profile-grid"
-          v-for="(router, index) in routers"
-          :key="index"
-          @click="navAnimation()"
-        >
-          <router-link :to="{ name: router.name }" class="option-grid">
-            <div class="icon">
+  <div class="h-full w-full mt-0">
+    <div class="flex h-full">
+      <div class="bg-primary h-full max-md:hidden" style="width: '320px'">
+        <div class="mt-3 px-3" v-for="(router, index) in routers" :key="index">
+          <router-link :to="{ name: router.name }" class="flex py-2 rounded-sm px-5 items-center hover:bg-primary-200">
+            <div class="w-10 h-10 rounded-sm bg-white">
               <div class="svg"></div>
             </div>
-            <div class="desc">
+            <div class="text-white px-5 font-bold text-lg " style="width: 190px">
               <p>{{ router.text }}</p>
             </div>
           </router-link>
         </div>
       </div>
-      <div class="sub-profile">
+      <div class="p-5 overflow-x-auto w-full">
         <router-view></router-view>
       </div>
     </div>
@@ -29,7 +21,6 @@
 </template>
 
 <script>
-import Animation from "@/js/animation.js";
 import jwt_decode from "jwt-decode";
 
 export default {
@@ -45,11 +36,6 @@ export default {
           text: "Datos Personales",
         },
         {
-          name: "Surprise",
-          icon: "icon-cake",
-          text: "Tortas y Sorpresas",
-        },
-        {
           name: "MyOrder",
           icon: "icon-order",
           text: "Mis Pedidos",
@@ -59,32 +45,34 @@ export default {
           icon: "icon-bakery-add",
           text: "Tengo un Negocio",
         },
-        {
-          name: "AddLocation",
-          icon: "icon-gps",
-          text: "Mis Ubicaciones",
-        },
       ],
       routersBaker: [
         {
           name: "Privacy",
           icon: "icon-user-private",
-          text: "Datos Personales",
-        },
-        {
-          name: "MyOrder",
-          icon: "icon-order",
-          text: "Mis Pedidos",
-        },
-        {
-          name: "AddCard",
-          icon: "icon-card-add",
-          text: "Mis Tarjetas",
+          text: "Mi Información",
         },
         {
           name: "AddProduct",
           icon: "icon-gps",
           text: "Mi tienda",
+        },
+      ],
+      routersOwner: [
+        {
+          name: "checkBaker",
+          icon: "icon-order",
+          text: "Solicitudes",
+        },
+        {
+          name: "checkBaker",
+          icon: "icon-order",
+          text: "Torta",
+        },
+        {
+          name: "checkBaker",
+          icon: "icon-order",
+          text: "Pie",
         },
       ],
       routers: [],
@@ -98,10 +86,17 @@ export default {
     isloggedIn() {
       this.loggedInCustomer = this.$store.state.Authenticate.status.loggedIn;
 
+      if(!this.loggedInCustomer) {
+        this.$router.push({ name: "Home" });
+        return
+      } 
+
+      var token = this.$store.state.Authenticate.token;
+
       if (!this.loggedInCustomer) {
         this.$router.push({ name: "Home" });
       }
-      var token = this.$store.state.Authenticate.token;
+      
       var decode = jwt_decode(token);
 
       this.id = decode.id;
@@ -111,6 +106,8 @@ export default {
         this.routers = this.routersCustomer;
       } else if (decode.role === "BAKER") {
         this.routers = this.routersBaker;
+      } else if (decode.role === "OWNER") {
+        this.routers = this.routersOwner;
       }
     },
     render() {
@@ -118,11 +115,6 @@ export default {
       const render_width = window.matchMedia("(max-width: 1200px)");
       function render(media) {
         if (media.matches) {
-          localdata.menu = Animation.LeftRightDisplay(
-            "nav-profile",
-            "sub-profile",
-            localdata.menu
-          );
           localdata.active = true;
         } else {
           localdata.menu = true;
@@ -132,28 +124,16 @@ export default {
       render(render_width);
       render_width.addListener(render);
     },
-    navAnimation() {
-      let localdata = this;
-      if (this.active === true) {
-        localdata.menu = Animation.LeftRightDisplay(
-          "nav-profile",
-          "sub-profile",
-          localdata.menu
-        );
-      }
-    },
   },
   mounted() {
     this.isloggedIn();
     this.render();
-    this.navAnimation();
   },
 };
 </script>
 
-<style>
+<style scoped>
 div.profile-title {
-  font-family: Poppins-Bold;
   font-size: 30px;
   color: var(--second);
 }
@@ -203,7 +183,6 @@ div.nav-profile div.profile-grid a.option-grid div.desc {
   margin-left: 8px;
   font-size: 1.2rem;
   display: flex;
-  font-family: Poppins-Bold;
   color: var(--default);
   align-items: center;
   grid-area: desc;
@@ -278,7 +257,6 @@ div.container-group div.sub-profile {
 
   div.nav-profile div.profile-grid a.option-grid div.desc {
     font-size: 1rem;
-    font-family: Poppins-Bold;
   }
 }
 </style>

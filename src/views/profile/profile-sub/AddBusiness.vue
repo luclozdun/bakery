@@ -1,66 +1,74 @@
 <template>
-  <div class="container-addbusiness">
-    <div class="container-addbusibess">
+  <div class="container-addbusiness" v-if="reloadPage">
+    <div class="w-full mb-4">
       <div class="profile-title">
-        <p>Deseo añadir mi pasteleria</p>
+        <Title text="Deseo añadir mi pasteleria" />
       </div>
-      <div class="card" v-if="nobakery === true">
-        <input
-          minlength="8"
-          placeholder="Nombre de la pasteleria"
-          required
-          v-model="profile.nameBakery"
-        />
-        <input
-          minlength="5"
-          placeholder="Costo referencial Ejm: $$$"
-          required
-          v-model="profile.cost"
-        />
-        <input
-          minlength="20"
-          placeholder="Ubicacion"
-          required
-          v-model="profile.location"
-        />
-        <input
-          minlength="8"
-          maxlength="8"
-          placeholder="dni"
-          required
-          v-model="profile.dni"
-        />
-        <input
-          minlength="8"
-          placeholder="DNI"
-          required
-          v-model="profile.docDNI"
-        />
-        <input minlength="8" placeholder="ruc" required v-model="profile.ruc" />
-        <input
-          minlength="8"
-          placeholder="RUC"
-          required
-          v-model="profile.docRUC"
-        />
-        <input
-          minlength="8"
-          placeholder="Sanidad"
-          required
-          v-model="profile.docSanitation"
-        />
-        <input
-          minlength="8"
-          placeholder="Permiso de Municipalidad"
-          required
-          v-model="profile.permMunicipa"
-        />
-        <input
-          minlength="8"
-          placeholder="Licencia"
-          required
-          v-model="profile.license"
-        />
+      <div class="space-y-4 card mt-4" v-if="nobakery === true">
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">Nombre de la Pasteleria:</label>
+          <input style="margin-top: 0 !important;" type="text" placeholder="EJM: LA BARBACOA MÁGICA" required
+            @input="handleInput" name="nameBakery" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.nameBakeryRequired">DEBE INGRESAR UN NOMBRE</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">Costo($):</label>
+          <input style="margin-top: 0 !important;" type="text" placeholder="EJM: $$$" required @input="handleInput"
+            name="cost" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.costRequired">DEBE INGRESAR UN COSTO
+            REFERENCIAL</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">Ubicación:</label>
+          <input style="margin-top: 0 !important;" type="text" placeholder="EJM: AV. BRASIL 354" required
+            @input="handleInput" name="location" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.locationRequired">DEBE INGRESAR UNA
+            UBICACIÓN</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">DNI:</label>
+          <input style="margin-top: 0 !important;" type="text" placeholder="EJM: 98735155" required @input="handleInput"
+            name="dni" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.dniRequired">DEBE INGRESAR SU NUMERO DE
+            IDENTIFICACIÓN</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">DNI - DOCUMENTO:</label>
+          <input style="margin-top: 0 !important;" type="file" placeholder="DNI" required @change="handleFile"
+            name="docDNI" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.docDNIRequired !== ''">{{ profile.docDNIRequired
+          }}</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">RUC:</label>
+          <input style="margin-top: 0 !important;" type="text" placeholder="ruc" required @input="handleInput"
+            name="ruc" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.rucRequired">DEBE INGRESAR SU NUMERO RUC</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">RUC - DOCUMENTO:</label>
+          <input style="margin-top: 0 !important;" type="file" required @change="handleFile" name="docRUC" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.docRUCRequired !== ''">{{ profile.docRUCRequired
+          }}</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">SANIDAD - DOCUMENTO:</label>
+          <input style="margin-top: 0 !important;" type="file" required @change="handleFile" name="docSanitation" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.docSanitationRequired !== ''">{{
+            profile.docSanitationRequired }}</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">PERMISO MUNICIPAL - DOCUMENTO:</label>
+          <input style="margin-top: 0 !important;" type="file" required @change="handleFile" name="permMunicipa" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.permMunicipaRequired !== ''">{{
+            profile.permMunicipaRequired }}</label>
+        </div>
+        <div class="w-full flex flex-col">
+          <label class="text-primary text-sm text-font">LICENCIA - DOCUMENTO:</label>
+          <input style="margin-top: 0 !important;" type="file" required @change="handleFile" name="license" />
+          <label class="text-red-500 text-sm text-font" v-if="profile.licenseRequired !== ''">{{ profile.licenseRequired
+          }}</label>
+        </div>
         <div class="button">
           <button class="accept" @click="createProfile">
             Enviar Solicitud
@@ -68,47 +76,10 @@
         </div>
       </div>
       <template v-else>
-        <v-data-table
-          :headers="headers"
-          :items="profiles"
-          hide-default-footer
-          class="table"
-        >
-          <template v-slot:[`item.permMunicipa`]="{}">
-            <div class="t-flex">
-              <button>
-                <v-icon x-large>
-                  mdi-file-pdf-box
-                </v-icon>
-              </button>
-            </div>
-          </template>
-          <template v-slot:[`item.license`]="{}">
-            <div class="t-flex">
-              <button>
-                <v-icon x-large>
-                  mdi-file-pdf-box
-                </v-icon>
-              </button>
-            </div>
-          </template>
-          <template v-slot:[`item.docSanitation`]="{}">
-            <div class="t-flex">
-              <button>
-                <v-icon x-large>
-                  mdi-file-pdf-box
-                </v-icon>
-              </button>
-            </div>
-          </template>
-          <template v-slot:[`item.actions`]="{}">
-            <div class="t-flex">
-              <v-icon big @click="deleteProfile" v-if="process !== 2">
-                mdi-delete
-              </v-icon>
-            </div>
-          </template>
-        </v-data-table>
+        <div class="mt-4">
+          <Table :filter="filterTable" :data="profiles" @onRow="onClickRow" />
+        </div>
+
       </template>
       <div class="card" v-if="(process === 2) | (process === 3)">
         <button class="accept" v-on:click="solicitude = !solicitude">
@@ -152,37 +123,139 @@
         </div>
       </div>
     </div>
+    <div v-if="this.loading">
+      <Loading />
+    </div>
   </div>
 </template>
 
 <script>
 import ProfileService from "@/service/profile/ProfileService";
+import ConvertBlob from "@/service/blob/ConvertBlob";
 import jwt_decode from "jwt-decode";
+import Table from "../../../components/Table";
+import { DocumentSearchIcon, QuestionMarkCircleIcon } from '@vue-hero-icons/solid'
+import Title from "../../../components/Title.vue";
+import AWS_S3 from "@/service/aws/s3"
+import Loading from '../../../components/Loading';
+
+const typeEvent = {
+  dni: 'DOC-DNI',
+  ruc: 'DOC-RUC',
+  permi: 'DOC-PERM',
+  license: 'DOC-LIC',
+  sanity: 'DOC-SAN',
+  doc: 'DOC'
+}
 
 export default {
   data() {
     return {
-      headers: [
-        { text: "Id", value: "id" },
-        { text: "DNI", value: "dni" },
-        { text: "RUC", value: "ruc" },
-        { text: "Licensia (PDF)", value: "license" },
-        { text: "Municipalidad (PDF)", value: "permMunicipa" },
-        { text: "Sanidad (PDF)", value: "docSanitation" },
-        { text: "Actions", value: "actions", sortable: false },
-      ],
+      reloadPage: false,
+      filterTable: {
+        cols: [
+          {
+            title: 'Nombre',
+            data: (v) => (v.nameBakery),
+            type: 'normal',
+            width: '100px',
+            class: 'text-center'
+          },
+          {
+            title: 'LOCACIÓN',
+            data: (v) => (v.location),
+            type: 'normal',
+            class: 'text-center'
+          },
+          {
+            title: 'DNI',
+            data: (v) => (v.dni),
+            type: 'normal',
+            class: 'text-center'
+          },
+          {
+            type: 'icon',
+            icon: DocumentSearchIcon,
+            indetity: typeEvent.dni,
+            class: 'text-white flex justify-center',
+            classIcon: 'bg-red-100 cursor-pointer p-1 bg-title rounded-full'
+          },
+          {
+            title: 'RUC',
+            data: (v) => (v.ruc),
+            type: 'normal',
+            class: 'text-center'
+          },
+          {
+            type: 'icon',
+            icon: DocumentSearchIcon,
+            indetity: typeEvent.ruc,
+            class: 'text-white flex justify-center',
+            classIcon: 'bg-red-100 cursor-pointer p-1 bg-title rounded-full'
+          },
+          {
+            title: 'LICENCIA',
+            type: 'icon',
+            icon: DocumentSearchIcon,
+            indetity: typeEvent.license,
+            class: 'text-white flex justify-center',
+            classIcon: 'bg-red-100 cursor-pointer p-1 bg-title rounded-full'
+          },
+          {
+            title: 'PERMISO MUNICIPAL',
+            type: 'icon',
+            icon: DocumentSearchIcon,
+            indetity: typeEvent.permi,
+            class: 'text-white flex justify-center',
+            classIcon: 'bg-red-100 cursor-pointer p-1 bg-title rounded-full'
+          },
+          {
+            title: 'SANIDAD',
+            type: 'icon',
+            icon: DocumentSearchIcon,
+            indetity: typeEvent.sanity,
+            class: 'text-white flex justify-center',
+            classIcon: 'bg-red-100 cursor-pointer p-1 bg-title rounded-full'
+          },
+          {
+            title: '',
+            data: (v) => (v.location),
+            type: 'actions',
+            width: '100px',
+            actions: [
+              {
+                label: 'ESTADO',
+                icon: QuestionMarkCircleIcon,
+                class: 'bg-blue-500 text-white'
+              }
+            ],
+          }
+        ]
+      },
+      loading: false,
       profiles: [],
       profile: {
         customerId: 0,
-        dni: "",
-        docDNI: "",
-        ruc: "",
-        docRUC: "",
-        docSanitation: "",
-        permMunicipa: "",
-        license: "",
-        nameBakery: "",
-        cost: "",
+        dni: '',
+        dniRequired: false,
+        docDNI: '',
+        docDNIRequired: '',
+        ruc: '',
+        rucRequired: false,
+        docRUC: '',
+        docRUCRequired: '',
+        docSanitation: '',
+        docSanitationRequired: '',
+        permMunicipa: '',
+        permMunicipaRequired: '',
+        license: '',
+        licenseRequired: '',
+        nameBakery: '',
+        nameBakeryRequired: false,
+        cost: '',
+        costRequired: false,
+        location: '',
+        locationRequired: false,
       },
       nobakery: false,
       id: 0,
@@ -190,58 +263,222 @@ export default {
       prof: {},
       process: 0,
       solicitude: true,
+      archivo: File,
+      faltaDocumento: 'DEBE INGRESAR UN DOCUMENTO',
+      faltaDocument5MB: 'DE INGRESAR UN DOCUMENTO MENOR DE 5MB'
     };
   },
   methods: {
+    async DownloadDocument(key, name) {
+      this.loading = true
+      const blob = await AWS_S3.GetByKey(key, name)
+      ConvertBlob.ConvertBlobToDocument(blob)
+      this.loading = false
+    },
+    async onClickRow(val) {
+      if (val.type === typeEvent.dni) await this.DownloadDocument(val.docDNI, `${val.nameBakery}-DNI`)
+      else if (val.type === typeEvent.ruc) await this.DownloadDocument(val.docRUC, `${val.nameBakery}-RUC`)
+      else if (val.type === typeEvent.license) await this.DownloadDocument(val.license, `${val.nameBakery}-LICENCIA`)
+      else if (val.type === typeEvent.permi) await this.DownloadDocument(val.permMunicipa, `${val.nameBakery}-PERMISO-MUNICIPAL`)
+      else if (val.type === typeEvent.sanity) await this.DownloadDocument(val.docSanitation, `${val.nameBakery}-SANIDAD`)
+    },
+    handleInput(e) {
+      var state = false
+      const { value, name } = e.target
+
+      if (value === '') state = true
+
+      this.profile[name] = value
+      this.profile[`${name}Required`] = state
+    },
+    handleFile(e) {
+      const { files, name } = e.target
+      var state = ''
+
+      if (files.length === 0) state = this.faltaDocumento
+
+      if (this.validateFileToMB(files[0], 5)) state = faltaDocument5MB
+
+      this.profile[name] = files[0]
+      this.profile[`${name}Required`] = state
+    },
     initialCustomerId() {
+      var isLoggedIn = this.$store.state.Authenticate.status.loggedIn;
+      if (!isLoggedIn) {
+        return;
+      }
       var token = this.$store.state.Authenticate.token;
+      if (token === undefined)
+        this.$router.push({ name: "Home" });
       var data = jwt_decode(token);
       this.id = data.id;
+      this.role = data.role;
+      if (this.role !== 'CUSTOMER') {
+        this.$router.push({ name: 'Home' });
+        return;
+      }
+    },
+    validateFileToMB(file, mb = 5) {
+      const size = file.size / 1024
+
+      if (size > mb) return false
+      return true
     },
     getByCustomerId() {
-      ProfileService.getByCustomer(this.id).then(
-        (response) => {
-          this.profiles.push(response.data);
-          this.nobakery = false;
-          this.process = response.data.process;
-          this.idProfile = response.data.id;
-        },
-        (error) => {
-          console.log(error);
-          this.nobakery = true;
-        }
-      );
+      this.loading = true;
+      ProfileService.getByCustomer(this.id).then((response) => {
+        this.profiles.push(response.data);
+        this.nobakery = false;
+        this.process = response.data.process;
+        this.idProfile = response.data.id;
+        this.reloadPage = true
+      }, (error) => {
+        console.log(error);
+        this.nobakery = true;
+        this.reloadPage = true
+      }).then(() => this.loading = false);
     },
-    createProfile() {
+    async createProfile() {
+      console.log(this.profile)
+
+      var success = true
+
+      if (this.profile.nameBakery === '') {
+        success = false
+        this.profile.nameBakeryRequired = true
+      }
+
+      if (this.profile.cost === '') {
+        success = false
+        this.profile.costRequired = true
+      }
+
+      if (this.profile.location === '') {
+        success = false
+        this.profile.locationRequired = true
+      }
+
+      if (this.profile.dni === '') {
+        success = false
+        this.profile.dniRequired = true
+      }
+
+      if (this.profile.ruc === '') {
+        success = false
+        this.profile.rucRequired = true
+      }
+
+      if (this.profile.docDNI === '') {
+        success = false
+        this.profile.docDNIRequired = this.faltaDocumento
+      }
+
+      if (this.profile.docRUC === '') {
+        success = false
+        this.profile.docRUCRequired = this.faltaDocumento
+      }
+
+      if (this.profile.docSanitation === '') {
+        success = false
+        this.profile.docSanitationRequired = this.faltaDocumento
+      }
+
+      if (this.profile.permMunicipa === '') {
+        success = false
+        this.profile.permMunicipaRequired = this.faltaDocumento
+      }
+
+      if (this.profile.license === '') {
+        success = false
+        this.profile.licenseRequired = this.faltaDocumento
+      }
+
+      if (this.validateFileToMB(this.profile.docDNI, 5)) {
+        success = false
+        this.profile.docDNIRequired = this.faltaDocument5MB
+      }
+
+      if (this.validateFileToMB(this.profile.docRUC, 5)) {
+        success = false
+        this.profile.docRUCRequired = this.faltaDocument5MB
+      }
+
+      if (this.validateFileToMB(this.profile.docSanitation, 5)) {
+        success = false
+        this.profile.docSanitationRequired = this.faltaDocument5MB
+      }
+
+      if (this.validateFileToMB(this.profile.permMunicipa, 5)) {
+        success = false
+        this.profile.permMunicipaRequired = this.faltaDocument5MB
+      }
+
+      if (this.validateFileToMB(this.profile.license, 5)) {
+        success = false
+        this.profile.licenseRequired = this.faltaDocument5MB
+      }
+
+      if (!success) return
+      this.loading = true;
       this.profile.customerId = this.id;
-      ProfileService.create(this.profile).then(
-        () => {
-          this.getByCustomerId();
-          this.profile = Object.assign({});
-        },
-        (error) => console.log(error)
-      );
+      const dni = await AWS_S3.Upload(this.profile.docDNI)
+      if (!dni.success) success = false
+
+      const ruc = await AWS_S3.Upload(this.profile.docRUC)
+      if (!ruc.success) success = false
+
+      const municipal = await AWS_S3.Upload(this.profile.permMunicipa)
+      if (!municipal.success) success = false
+
+      const sanitary = await AWS_S3.Upload(this.profile.docSanitation)
+      if (!sanitary.success) success = false
+
+      const license = await AWS_S3.Upload(this.profile.license)
+      if (!license.success) success = false
+
+      if (!success) return
+
+      const request = {
+        cost: this.profile.cost,
+        customerId: this.profile.customerId,
+        dni: this.profile.dni,
+        docDNI: dni.key,
+        docRUC: ruc.key,
+        docSanitation: sanitary.key,
+        license: license.key,
+        location: this.profile.location,
+        nameBakery: this.profile.nameBakery,
+        permMunicipa: municipal.key,
+        ruc: this.profile.ruc
+      }
+
+      ProfileService.create(request).then(() => {
+        this.getByCustomerId();
+        this.profile = Object.assign({});
+      }, (error) => console.log(error)).then(() => this.loading = false);
+    },
+    async createProfilee() {
+      const key = '73c130e7-c503-439f-852d-faab76812d31.jpg'
+      const response = await AWS_S3.GetByKey(key, 'PENDEJO')
+      await ConvertBlob.ConvertAWSToDocument(response)
     },
     deleteProfile() {
-      ProfileService.deleteByCustomer(this.idProfile).then(
-        () => {
-          this.profiles.pop();
-          this.getByCustomerId();
-        },
-        (error) => console.log(error)
-      );
+      ProfileService.deleteByCustomer(this.idProfile).then(() => {
+        this.profiles.pop();
+        this.getByCustomerId();
+      }, (error) => console.log(error));
     },
   },
   mounted() {
     this.initialCustomerId();
     this.getByCustomerId();
   },
+  components: { Table, Title, Loading, Loading }
 };
 </script>
 
-<style>
+<style scoped>
 div.container-addbusiness div.card {
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -262,7 +499,6 @@ div.container-addbusiness div.card input {
   border: 1px solid var(--input-box);
   margin-top: 20px;
   font-size: 1.1rem;
-  font-family: Poppins-Bold;
 }
 
 div.container-addbusiness div.card input,
@@ -277,12 +513,10 @@ div.container-addbusiness div.card input::placeholder {
 div.container-addbusiness div.card button {
   padding: 0.6em 0.8em;
   margin-top: 30px;
-  font-family: Poppins-Bold;
 }
 
 div.container-addbusiness td button {
   padding: 0.6em 0.8em;
-  font-family: Poppins-Bold;
   padding: 0.2em;
 }
 
@@ -354,5 +588,4 @@ div.solicitude div.close div.icon {
   margin-top: 5px;
   border-radius: 50%;
   cursor: pointer;
-}
-</style>
+}</style>

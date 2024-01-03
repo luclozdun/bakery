@@ -1,33 +1,22 @@
 <template>
   <div class="container-myproducts">
+    <Title text="Mis Productos"/>
     <div class="configureX">
       <button class="accept" @click="createCake">Agregar</button>
     </div>
-    <product
-      :bakerId="bakerId"
-      ref="listProducts"
-      @updateCake="update"
-      :crud="true"
-      :sidebar="false"
-      :adm="true"
-    />
-    <form-cake
-      v-if="create"
-      :bakerId="bakerId"
-      ref="formCake"
-      @closeCake="close"
-      @refrestList="refresh"
-    />
+    <product :bakerId="bakerId" ref="listProducts" @updateCake="update" :crud="true" :sidebar="false" :adm="true" />
+    <form-cake v-if="create" :bakerId="bakerId" ref="formCake" @closeCake="close" @refrestList="refresh" />
   </div>
 </template>
 
 <script>
+import Title from "../../../components/Title.vue";
 import FormCake from "../../foods/cake/FormCake.vue";
 import Product from "../../foods/cake/Product.vue";
-import jwtDecode from "jwt-decode";
+import jwt_decode from "jwt-decode";
 
 export default {
-  components: { Product, FormCake },
+  components: { Product, FormCake, Title },
   data() {
     return {
       create: false,
@@ -36,7 +25,7 @@ export default {
   computed: {
     bakerId() {
       var token = this.$store.state.Authenticate.token;
-      var data = jwtDecode(token);
+      var data = jwt_decode(token);
       return data.id;
     },
   },
@@ -62,7 +51,20 @@ export default {
       });
     },
     baid() {
-      console.log(this.bakerId);
+      var isLoggedIn = this.$store.state.Authenticate.status.loggedIn;
+      
+      if(!isLoggedIn) {
+        return
+      } 
+
+      var token = this.$store.state.Authenticate.token;
+      var data = jwt_decode(token);
+      var role = data.role;
+
+      if(role !== 'BAKER'){
+        this.$router.push({ name: 'Home' });
+        return
+      }
     },
   },
   mounted() {
@@ -71,7 +73,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .container-myproducts {
   padding-bottom: 20px;
 }

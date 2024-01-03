@@ -1,63 +1,89 @@
 <template>
-  <div class="container-order">
-    <div class="card" v-for="order in orders" :key="order.bakerId">
-      <div class="image">
-        <div class="circle"></div>
-      </div>
-      <div class="description">
-        <div v-for="cake in order.cakes" :key="cake.id" class="cake">
-          <div class="type">{{ cake.typeCake.name }}</div>
-          <div class="desc p">
-            Deliciosa torta sabor sabor
-            <span>{{ cake.tasteCake.name }}</span> con cobertura de
-            <span>{{ cake.coverCake.name }}</span> de tamaño
-            <span>{{ cake.sizeCake.name }}</span> precio unitario
-            <span>S/{{ cake.price }}</span> y con rellenos de
-            <span v-for="filler in cake.fillerCakes" :key="filler.id">
-              {{ filler.name }}</span
-            >
-          </div>
-          <div class="quantify">
-            <div class="button left">
-              <button @click="quantify(cake, -1, order)">-</button>
-            </div>
-            <input
-              style="background: white"
-              v-model="cake.stock"
-              type="number"
-              disabled
-            />
-            <div class="button right">
-              <button @click="quantify(cake, 1, order)">+</button>
-            </div>
-          </div>
-          <div class="stock">
-            <p>Stock: {{ cake.quantify }}</p>
-          </div>
-          <div class="remove" @click="remove(cake.id, order.bakerId)">
-            <p>
-              Eliminar
-            </p>
-          </div>
-
-          <div class="subtotal">
-            <p>
-              S/
-              <label>{{ cake.stock * cake.price }}</label>
-            </p>
-          </div>
+  <div>
+    <div class="container-order" v-if="reload">
+      <p class="text-primary mt-8 font-bold text-3xl underline">MIS ORDENES</p>
+      <div v-if="orders.length === 0" class="flex justify-center mt-12">
+        <div class="w-4/6 bg-white border border-primary border-dashed text-primary text-center px-2 rounded-md py-4">
+          <p class="mb-4 text-xl font-bold">CANASTA VACIA</p>
+          <p>No presenta productos dentro de su carrito. Puede agregar productos dentro de la seccion de productos.</p>
         </div>
-        <div class="delivery p">Delivery: {{ order.delivery }}</div>
-        <div class="adm p">Costo Administrativo: {{ order.admCost }}</div>
       </div>
-      <button class="buy" @click="buy(order)" v-if="order.avaible">
-        S/{{ order.total }}
-      </button>
-      <button class="buy bad" @click="buy(order)" v-else>
-        S/{{ order.total }}
-      </button>
+      <div class="card rounded-md" v-for="order in orders" :key="order.bakerId">
+        <div class="image">
+          <div class="circle rounded-full"></div>
+        </div>
+        <div class="description">
+          <div v-for="cake in order.cakes" :key="cake.id" class="cake">
+            <div class="type">{{ cake.typeCake.name }}</div>
+            <div class="desc p">
+              Deliciosa torta sabor sabor
+              <span>{{ cake.tasteCake.name }}</span> con cobertura de
+              <span>{{ cake.coverCake.name }}</span> de tamaño
+              <span>{{ cake.sizeCake.name }}</span> precio unitario
+              <span>S/{{ cake.price }}</span> y con rellenos de
+              <span v-for="filler in cake.fillerCakes" :key="filler.id">
+                {{ filler.name }}</span>
+            </div>
+            <div class="quantify">
+              <div class="button left">
+                <button @click="quantify(cake, -1, order)">-</button>
+              </div>
+              <input style="background: white" v-model="cake.stock" type="number" disabled />
+              <div class="button right">
+                <button @click="quantify(cake, 1, order)">+</button>
+              </div>
+            </div>
+            <div class="stock">
+              <p>Stock: {{ cake.quantify }}</p>
+            </div>
+            <div class="remove" @click="remove(cake.id, order.bakerId)">
+              <p>
+                Eliminar
+              </p>
+            </div>
+
+            <div class="subtotal">
+              <p>
+                S/
+                <label>{{ (cake.stock * cake.price).toFixed(2) }}</label>
+              </p>
+            </div>
+          </div>
+          <div class="delivery p">Delivery: {{ order.delivery }}</div>
+          <div class="adm p">Costo Administrativo: {{ order.admCost }}</div>
+        </div>
+        <button class="buy" @click="buy(order)" v-if="order.avaible">
+          S/{{ order.total.toFixed(2) }}
+        </button>
+        <button class="buy bad" @click="buy(order)" v-else>
+          S/{{ order.total.toFixed(2) }}
+        </button>
+      </div>
+      <payment ref="post" @showModalMessage="showModalMessage" />
     </div>
-    <payment ref="post" />
+    <div v-if="messageSale" class="w-full h-full fixed bg-black top-0 z-50 bg-opacity-60 flex justify-center items-center">
+      <div class="flex items-center bg-white flex-col py-10 rounded-lg" style="width: 520px" v-if="successSale">
+          <div class="w-24 h-24 bg-green-500 rounded-full flex justify-center items-center">
+            <check-icon class="w-12 h-12 text-white"/>
+          </div>
+          <div class="flex justify-center flex-col">
+            <p class="mt-8 text-lg">Venta realizada de manera correcta.</p>
+          </div>
+          <button class="mt-4 py-2 px-3 rounded-md text-white font-bold bg-green-500" @click="closeModalMessage">ACEPTAR</button>
+      </div>
+      <div class="flex items-center bg-white flex-col py-10 rounded-lg" style="width: 520px" v-if="!successSale">
+          <div class="w-24 h-24 bg-red-500 rounded-full flex justify-center items-center">
+            <x-icon class="w-12 h-12 text-white"/>
+          </div>
+          <div class="flex justify-center flex-col">
+            <p class="mt-8 text-lg">Venta realizada de manera correcta.</p>
+          </div>
+          <button class="mt-4 py-2 px-3 rounded-md text-white font-bold bg-green-500" @click="closeModalMessage">ACEPTAR</button>
+      </div>
+    </div>
+    <div v-if="loading">
+      <loading />
+    </div>
   </div>
 </template>
 
@@ -65,10 +91,12 @@
 import OrderService from "@/service/order/OrderService";
 import jwtDecode from "jwt-decode";
 import CakeService from "@/service/cake/CakeService";
-import Payment from "./Payment.vue";
+import Payment from "./Payment";
+import Loading from "../../components/Loading.vue";
+import { CheckIcon, XIcon } from '@vue-hero-icons/solid'
 
 export default {
-  components: { Payment },
+  components: { Payment, Loading, CheckIcon, XIcon },
   data() {
     return {
       order: {
@@ -88,6 +116,10 @@ export default {
         bakerId: 0,
         productId: 0,
       },
+      reload: false,
+      loading: false,
+      messageSale: false,
+      successSale: false
     };
   },
   computed: {
@@ -98,7 +130,26 @@ export default {
     },
   },
   methods: {
+    showModalMessage(result){
+      this.initialState()
+      this.messageSale = true
+      this.successSale = result.success
+    },
+    closeModalMessage(){
+      this.messageSale = false      
+    },
+    resultSale(e){
+      this.messageSale = true
+      this.successSale = true
+      console.log(e)
+    },
     initialState() {
+      this.loading = true
+      var isLoggedIn = this.$store.state.Authenticate.status.loggedIn;
+
+      if (!isLoggedIn) { return }
+
+
       var cakesIds = [];
       var orderStore = this.$store.state.OrderProduct.orders;
       orderStore.forEach((o) => {
@@ -107,6 +158,8 @@ export default {
       CakeService.getAllByIds(cakesIds).then((response) => {
         var cakeDictionary = this.setDictionary(response);
         this.orders = this.setOrderDetail(orderStore, cakeDictionary);
+        this.loading = false
+        this.reload = true
       });
     },
     setDictionary(response) {
@@ -149,7 +202,7 @@ export default {
     quantify(cake, operation, order) {
       var quantify = cake.stock;
       var change = false;
-      if (quantify + operation <= 1) {
+      if (quantify + operation < 1) {
         quantify = 1;
       } else if (quantify + operation > cake.quantify) {
         quantify = cake.quantify;
@@ -157,6 +210,7 @@ export default {
         quantify = quantify + operation;
         change = true;
       }
+
       cake.stock = quantify;
       if (change) {
         this.updateTotal(order);

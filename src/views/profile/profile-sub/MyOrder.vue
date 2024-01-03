@@ -1,7 +1,7 @@
 <template>
   <div class="container-orders">
     <div class="profile-title">
-      <p>Mis Ordenes</p>
+      <Title name="Mis Ordenes"/>
     </div>
     <div class="container-card-order" v-for="order in orders" :key="order.id">
       <div class="card-order">
@@ -44,38 +44,46 @@
 <script>
 import OrderService from "@/service/order/OrderService";
 import jwtDecode from "jwt-decode";
+import Title from "../../../components/Title.vue";
 
 export default {
-  name: "Order",
-  data() {
-    return {
-      orders: [],
-      customer: 0,
-    };
-  },
-  methods: {
-    initialize() {
-      var token = this.$store.state.Authenticate.token;
-      var data = jwtDecode(token);
-      this.customer = data.id;
-      this.customer = OrderService.getByCustomerId(this.customer).then(
-        (res) => {
-          this.orders = res.data;
-          console.log(this.orders);
-        },
-        (e) => {
-          console.log(e);
-        }
-      );
+    name: "Order",
+    data() {
+        return {
+            orders: [],
+            customer: 0,
+        };
     },
-  },
-  mounted() {
-    this.initialize();
-  },
+    methods: {
+        initialize() {
+            var isLoggedIn = this.$store.state.Authenticate.status.loggedIn;
+            if (!isLoggedIn) {
+                return;
+            }
+            var token = this.$store.state.Authenticate.token;
+            var data = jwtDecode(token);
+            this.customer = data.id;
+            this.role = data.role;
+            if (this.role !== 'CUSTOMER') {
+                this.$router.push({ name: 'Home' });
+                return;
+            }
+            this.customer = OrderService.getByCustomerId(this.customer).then((res) => {
+                this.orders = res.data;
+                console.log(this.orders);
+            }, (e) => {
+                console.log(e);
+            });
+        },
+    },
+    mounted() {
+        this.initialize();
+    },
+    components: { Title }
 };
 </script>
 
-<style>
+<style scoped>
 div.container-orders {
   width: 100%;
 }
@@ -98,7 +106,6 @@ div.container-card-order div.card-order {
 }
 
 div.card-order div.number-order {
-  font-family: Poppins-ExtraBold;
   display: inline-block;
   position: absolute;
   right: 0;
@@ -108,7 +115,6 @@ div.card-order div.number-order {
 }
 
 div.card-order div.card-title {
-  font-family: Poppins-Bold;
   display: flex;
   width: 100%;
   justify-content: center;
@@ -155,7 +161,6 @@ div.card-order div.card-desc div.card-info {
 }
 
 div.card-order div.card-desc div.card-info div.card-info-title {
-  font-family: Poppins-Bold;
   font-size: 1.4rem;
   color: var(--subtitle);
 }
@@ -177,10 +182,7 @@ div.card-info div.card-grid {
     60px auto 110px;
 }
 
-div.card-info div.card-grid div {
-  font-family: 1rem;
-  font-family: Poppins-Regular;
-}
+div.card-info div.card-grid div {}
 
 div.card-info div.card-grid div.quantify {
   display: flex;
@@ -216,7 +218,6 @@ div.card-order div.card-total div.total {
   font-size: 1.2rem;
   padding: 0.4em 0.8em;
   border-radius: 5px;
-  font-family: Poppins-Bold;
   color: var(--default);
   margin-right: 50px;
 }

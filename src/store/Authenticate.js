@@ -1,5 +1,6 @@
 import CustomerService from '@/service/security/CustomerService'
 import BakerService from '@/service/security/BakerService'
+import OwnerService from '@/service/security/OwnerService'
 import UserService from '@/service/security/UserService'
 
 const token = localStorage.getItem('token')
@@ -12,6 +13,15 @@ export const Authenticate = {
     actions: {
         loginCustomer({ commit }, customer) {
             return CustomerService.authenticate(customer).then(token => {
+                commit('loginSuccess', token)
+                return Promise.resolve(token)
+            }, error => {
+                commit('loginFailure')
+                return Promise.reject(error)
+            })
+        },
+        loginOwner({ commit }, owner) {
+            return OwnerService.authenticate(owner).then(token => {
                 commit('loginSuccess', token)
                 return Promise.resolve(token)
             }, error => {

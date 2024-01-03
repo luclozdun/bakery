@@ -1,22 +1,14 @@
 <template>
   <div class="createcake">
     <div class="card">
-      <div class="title" @click="close">
-        <p>Nuevo Producto</p>
+      <div @click="close">
+        <p class="py-4 text-primary border-b-2 border-primary">Nuevo Producto</p>
       </div>
-      <div class="data">
-        <div class="bakery">
-          <div class="circle"></div>
-        </div>
+      <div class="data overflow-y-auto py-2">
         <div class="select">
           <select required v-model="cake.typecakeId">
             <option value="" hidden></option>
-            <option
-              v-for="typeCake in typeCakes"
-              :key="typeCake.id"
-              :value="typeCake.id"
-              >{{ typeCake.name }}</option
-            >
+            <option v-for="typeCake in typeCakes" :key="typeCake.id" :value="typeCake.id">{{ typeCake.name }}</option>
           </select>
           <label>Tipo de torta</label>
           <div></div>
@@ -24,12 +16,8 @@
         <div class="select">
           <select required v-model="cake.tastecakeId">
             <option value="" hidden></option>
-            <option
-              v-for="tasteCake in tasteCakes"
-              :key="tasteCake.id"
-              :value="tasteCake.id"
-              >{{ tasteCake.name }}</option
-            >
+            <option v-for="tasteCake in tasteCakes" :key="tasteCake.id" :value="tasteCake.id">{{ tasteCake.name }}
+            </option>
           </select>
           <label>Sabor del keke</label>
           <div></div>
@@ -37,12 +25,7 @@
         <div class="select">
           <select required v-model="cake.sizecakeId">
             <option value="" hidden></option>
-            <option
-              v-for="sizeCake in sizeCakes"
-              :key="sizeCake.id"
-              :value="sizeCake.id"
-              >{{ sizeCake.name }}</option
-            >
+            <option v-for="sizeCake in sizeCakes" :key="sizeCake.id" :value="sizeCake.id">{{ sizeCake.name }}</option>
           </select>
           <label>Tamaño del keke</label>
           <div></div>
@@ -50,30 +33,21 @@
         <div class="select">
           <select required v-model="cake.covercakeId">
             <option value="" hidden></option>
-            <option
-              v-for="coverCake in coverCakes"
-              :key="coverCake.id"
-              :value="coverCake.id"
-              >{{ coverCake.name }}</option
-            >
+            <option v-for="coverCake in coverCakes" :key="coverCake.id" :value="coverCake.id">{{ coverCake.name }}
+            </option>
           </select>
           <label>Tipo de crema</label>
           <div></div>
         </div>
         <div class="filled">Rellenos</div>
         <div class="checkbox" v-for="filler in fillerCakes" :key="filler.id">
-          <label
-            >{{ filler.name }}
-            <input
-              type="checkbox"
-              :value="filler.id"
-              v-model="cake.fillerCakeIds"
-            />
+          <label>{{ filler.name }}
+            <input type="checkbox" :value="filler.id" v-model="cake.fillerCakeIds" />
             <span></span>
           </label>
         </div>
         <div class="input">
-          <input v-model="cake.price" type="number" required />
+          <input v-model="cake.price" type="text" @input="handlePriceInput" required />
           <label>Precio</label>
           <span></span>
         </div>
@@ -82,25 +56,32 @@
           <label>Cantidad</label>
           <span></span>
         </div>
-        <div>
-          <button class="accept" v-if="createValid" @click="createCake">
-            Create
-          </button>
-        </div>
-        <div>
-          <button class="update" v-if="updateValid" @click="updateCake">
-            Actualizar
-          </button>
-        </div>
 
         <div class="pie"></div>
       </div>
+      <div class="border-t-2 border-primary">
+        <div class="flex justify-center space-x-2">
+          <button class="bg-green-500 text-white text-sm px-2 py-2 rounded-lg" v-if="createValid" @click="createCake">
+            Crear
+          </button>
+          <button class="bg-orange-500 text-white text-sm px-2 py-2 rounded-lg" v-if="updateValid" @click="updateCake">
+            Actualizar
+          </button>
+          <button class="bg-red-500 text-white text-sm px-2 py-2 rounded-lg" @click="close">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div v-if="loading">
+      <Loading />
     </div>
   </div>
 </template>
 
 <script>
 import CakeService from "@/service/cake/CakeService";
+import Loading from "../../../components/Loading.vue";
 
 export default {
   name: "CreateCakes",
@@ -112,73 +93,78 @@ export default {
       typeCakes: [],
       fillerCakes: [],
       cake: {
-        bakerId: Number,
-        covercakeId: Number,
+        bakerId: "",
+        covercakeId: "",
         fillerCakeIds: [],
         price: 0,
         quantify: 0,
-        sizecakeId: Number,
-        tastecakeId: Number,
-        typecakeId: Number,
+        sizecakeId: "",
+        tastecakeId: "",
+        typecakeId: "",
       },
       createValid: false,
       updateValid: false,
       cakeId: Number,
+      loading: false
     };
   },
   props: {
     bakerId: Number,
   },
   methods: {
+    handlePriceInput() {
+      const regex = /^\d*\.?\d*$/;
+      if (!regex.test(this.cake.price)) {
+        this.cake.price = this.cake.price.replace(/[^\d.]/g, "");
+      }
+    },
     getAllPropCake() {
-      CakeService.getAllTastes().then(
-        (response) => {
-          this.tasteCakes = response.data;
-        },
-        (error) => console.log(error)
-      );
-
-      CakeService.getAllSizes().then(
-        (response) => {
-          this.sizeCakes = response.data;
-        },
-        (error) => console.log(error)
-      );
-
-      CakeService.getAllTypes().then(
-        (response) => {
-          this.typeCakes = response.data;
-        },
-        (error) => console.log(error)
-      );
-
-      CakeService.getAllCovers().then(
-        (response) => {
-          this.coverCakes = response.data;
-        },
-        (error) => console.log(error)
-      );
-
-      CakeService.getAllFillers().then(
-        (response) => {
-          this.fillerCakes = response.data;
-        },
-        (error) => console.log(error)
-      );
+      this.loading = true
+      CakeService.getAllTastes().then((response) => {
+        this.tasteCakes = response.data;
+      }, (error) => console.log(error));
+      CakeService.getAllSizes().then((response) => {
+        this.sizeCakes = response.data;
+      }, (error) => console.log(error));
+      CakeService.getAllTypes().then((response) => {
+        this.typeCakes = response.data;
+      }, (error) => console.log(error));
+      CakeService.getAllCovers().then((response) => {
+        this.coverCakes = response.data;
+      }, (error) => console.log(error));
+      CakeService.getAllFillers().then((response) => {
+        this.fillerCakes = response.data;
+      }, (error) => console.log(error)).then(() => this.loading = false);
     },
     btnCreate() {
       this.createValid = true;
     },
     createCake() {
+      this.loading = true
       this.cake.bakerId = this.bakerId;
+      var success = true;
+      if (this.cake.covercakeId === "") {
+        success = false;
+      }
+      if (this.cake.fillerCakeIds.length === 0) {
+        success = false;
+      }
+      if (this.cake.sizecakeId === "") {
+        success = false;
+      }
+      if (this.cake.tastecakeId === "") {
+        success = false;
+      }
+      if (this.cake.typecakeId === "") {
+        success = false;
+      }
       console.log(this.cake);
-      CakeService.createCake(this.cake).then(
-        () => {
-          this.$emit("refrestList", "someText");
-          this.close();
-        },
-        (error) => console.log(error)
-      );
+      if (!success)
+        return;
+      CakeService.createCake(this.cake).then(() => {
+        this.$emit("refrestList", "someText");
+        this.close();
+      }, (error) => console.log(error)).then(() => this.loading = false);
     },
     close() {
       this.createValid = false;
@@ -196,6 +182,7 @@ export default {
       this.$emit("closeCake", "someText");
     },
     btnUpdate(id, item) {
+      this.loading = true
       this.updateValid = true;
       var fillers = [];
       item.fillerCakes.forEach((filler) => {
@@ -214,18 +201,17 @@ export default {
       this.cakeId = id;
     },
     updateCake() {
-      CakeService.updateCake(this.cakeId, this.cake).then(
-        () => {
-          this.$emit("refrestList", "someText");
-          this.close();
-        },
-        (error) => console.log(error)
-      );
+      this.loading = true
+      CakeService.updateCake(this.cakeId, this.cake).then(() => {
+        this.$emit("refrestList", "someText");
+        this.close();
+      }, (error) => console.log(error)).then(() => this.loading = false);
     },
   },
   mounted() {
     this.getAllPropCake();
   },
+  components: { Loading }
 };
 </script>
 
@@ -254,7 +240,6 @@ export default {
   font-size: 1.3rem;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
 }
 
 .createcake .card .title {

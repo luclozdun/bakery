@@ -2,7 +2,7 @@
     <div>
         <div class="container-addlocation">
             <div class="profile-title">
-                <p>Añade los puntos de entrega</p>
+                <Title name="Añade los puntos de entrega"/>
             </div>
             <div class="container-card">
                 <div class="card-addlocation">
@@ -15,8 +15,11 @@
 </template>
 
 <script>
+import Title from '../../../components/Title.vue';
+
 export default{
-    name: 'AddLocation'
+    name: 'AddLocation',
+    components: { Title }
 }
 </script>
 

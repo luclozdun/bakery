@@ -1,11 +1,11 @@
 <template>
   <div class="container-product">
-    <div class="product-grid">
+    <div class="product-grid" v-if="reload">
       <div class="header"></div>
       <div class="main">
         <div class="food">
-          <div class="title">Tortas</div>
-          <div class="products">
+          <div class="mb-3 text-title font-bold text-4xl">Tortas</div>
+          <div class="grid xl:grid-cols-8 xl:gap-8 md:grid-cols-4 md:gap-4 gap-4 grid-cols-4" v-if="cakes.length !== 0">
             <div class="card" v-for="cake in cakes" :key="cake.id">
               <div class="img"></div>
               <div class="cook">
@@ -14,14 +14,10 @@
                 </div>
                 <div class="c-cook crud" v-if="crud">
                   <div class="update active" @click="update(cake.id, cake)">
-                    <v-icon>
-                      mdi-pencil
-                    </v-icon>
+                    <PencilIcon class="text-white"/>
                   </div>
                   <div class="delete active" @click="deleteCake(cake.id)">
-                    <v-icon>
-                      mdi-delete
-                    </v-icon>
+                    <TrashIcon class="text-white"/>
                   </div>
                 </div>
                 <div class="c-cook">
@@ -48,7 +44,9 @@
                       v-for="filler in cake.fillerCakes"
                       :key="filler.id"
                     >
-                      <div class="cook-img"></div>
+                      <div class="cook-img">
+                        <img :src="filler.image"/>
+                      </div>
                       <p>{{ filler.name }}</p>
                     </div>
                   </div>
@@ -93,110 +91,112 @@
               </div>
             </div>
           </div>
+          <div v-else>
+            <Empty :show="true" message="No hay tortas disponibles por el momento." />
+          </div>
         </div>
       </div>
     </div>
+    <div v-if="loading">
+      <Loading/>
+    </div>
   </div>
+  
 </template>
 
 <script>
 import CakeService from "@/service/cake/CakeService";
+import Empty from "../../../components/Empty.vue";
+import { TrashIcon, PencilIcon } from '@vue-hero-icons/solid'
+import Loading from "../../../components/Loading.vue";
 
 export default {
-  name: "Product",
-  data() {
-    return {
-      pies: [],
-      cakes: [],
-      dremove: {
-        bakerId: 0,
-        productId: 0,
-      },
-      dictionary: {},
-    };
-  },
-  props: {
-    bakerId: Number,
-    crud: Boolean,
-    adm: Boolean,
-  },
-  methods: {
-    add(item) {
-      item.buy = true;
-      var cake = {
-        type: item.typeCake.name,
-        id: item.id,
-        cover: item.coverCake.name,
-        size: item.sizeCake.name,
-        taste: item.tasteCake.name,
-        price: item.price,
-      };
-      var addCake = {
-        cake: cake,
-        bakerId: this.bakerId,
-      };
-
-      this.$store.dispatch("OrderProduct/addProduct", addCake).then(
-        () => {},
-        (error) => console.log(error)
-      );
+    name: "Product",
+    data() {
+        return {
+            pies: [],
+            cakes: [],
+            dremove: {
+                bakerId: 0,
+                productId: 0,
+            },
+            dictionary: {},
+            loading: false,
+            reload: false
+        };
     },
-    dictionaryCake() {
-      var dictionary = {};
-      var orders = this.$store.state.OrderProduct.orders;
-      if (orders !== []) {
-        orders.forEach((o) => {
-          o.products.listcakes.forEach((lc) => {
-            dictionary[lc] = lc;
-          });
-        });
-      }
-      return dictionary;
+    props: {
+        bakerId: Number,
+        crud: Boolean,
+        adm: Boolean,
     },
-    initialize() {
-      CakeService.getAllByBakerId(this.bakerId).then(
-        (response) => {
-          this.dictionary = this.dictionaryCake();
-          var cakes = response.data;
-          cakes.forEach((cake) => {
-            if (cake.id in this.dictionary) {
-              cake.buy = true;
-              return;
+    methods: {
+        add(item) {
+            item.buy = true;
+            var cake = {
+                type: item.typeCake.name,
+                id: item.id,
+                cover: item.coverCake.name,
+                size: item.sizeCake.name,
+                taste: item.tasteCake.name,
+                price: item.price,
+            };
+            var addCake = {
+                cake: cake,
+                bakerId: this.bakerId,
+            };
+            this.$store.dispatch("OrderProduct/addProduct", addCake).then(() => { }, (error) => console.log(error));
+        },
+        dictionaryCake() {
+            var dictionary = {};
+            var orders = this.$store.state.OrderProduct.orders;
+            if (orders !== []) {
+                orders.forEach((o) => {
+                    o.products.listcakes.forEach((lc) => {
+                        dictionary[lc] = lc;
+                    });
+                });
             }
+            return dictionary;
+        },
+        initialize() {
+          this.loading = true
+            CakeService.getAllByBakerId(this.bakerId).then((response) => {
+                this.dictionary = this.dictionaryCake();
+                var cakes = response.data;
+                cakes.forEach((cake) => {
+                    if (cake.id in this.dictionary) {
+                        cake.buy = true;
+                        return;
+                    }
+                    cake.buy = false;
+                });
+                this.cakes = cakes;
+                this.reload = true
+            }, (error) => console.log(error)).then(() => this.loading = false);
+        },
+        refreshCakes() {
+            this.initialize();
+        },
+        deleteCake(id) {
+            CakeService.deleteCake(id).then(() => {
+                this.refreshCakes();
+            }, (error) => console.log(error));
+        },
+        update(id, item) {
+            this.$emit("updateCake", id, item);
+        },
+        remove(cake) {
             cake.buy = false;
-          });
-          this.cakes = cakes;
+            this.dremove.bakerId = Number(this.bakerId);
+            this.dremove.productId = Number(cake.id);
+            this.$store.dispatch("OrderProduct/remove", this.dremove).then(() => { }, (error) => console.log(error));
         },
-        (error) => console.log(error)
-      );
     },
-    refreshCakes() {
-      this.initialize();
+    mounted() {
+        this.initialize();
     },
-    deleteCake(id) {
-      CakeService.deleteCake(id).then(
-        () => {
-          this.refreshCakes();
-        },
-        (error) => console.log(error)
-      );
-    },
-    update(id, item) {
-      this.$emit("updateCake", id, item);
-    },
-    remove(cake) {
-      cake.buy = false;
-      this.dremove.bakerId = Number(this.bakerId);
-      this.dremove.productId = Number(cake.id);
-      this.$store.dispatch("OrderProduct/remove", this.dremove).then(
-        () => {},
-        (error) => console.log(error)
-      );
-    },
-  },
-  mounted() {
-    this.initialize();
-  },
+    components: { Empty, TrashIcon, PencilIcon, Loading }
 };
 </script>
 
@@ -213,20 +213,13 @@ div.container-product div.product-grid {
 
 div.product-grid div.main div.food div.title {
   font-size: 2em;
-  font-family: Poppins-Bold;
   color: var(--second);
 }
 
-div.product-grid div.main div.products {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
-}
 
 div.product-grid div.main div.card {
   padding: 0.5rem 0;
   grid-column: span 2;
-  font-family: Poppins-Regular;
   box-shadow: 0px 0px 2px 0px var(--primary);
   display: flex;
   flex-direction: row;
@@ -238,7 +231,6 @@ div.product-grid div.main div.card {
 div.product-grid div.main div.card div.c-title {
   margin: 0 0 0.6em 0;
   font-size: 1.3rem;
-  font-family: Poppins-Bold;
   text-align: center;
 }
 
@@ -356,7 +348,6 @@ div.product-grid div.main div.card div.img {
 
 div.filter-container div.filter {
   cursor: pointer;
-  font-family: Poppins-Regular;
   color: var(--title);
 }
 

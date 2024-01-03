@@ -1,14 +1,5 @@
 <template>
-  <div class="bakery-product-container">
-    <div class="sidebar" v-if="sidebar === true">
-      <div class="b-filter">
-        <p>Torta</p>
-        <div class="space"></div>
-        <p>Torta</p>
-        <div class="space"></div>
-        <p>Torta</p>
-      </div>
-    </div>
+  <div class="bakery-product-container px-5 py-3">
     <div class="products">
       <product :bakerId="bakerId" :crud="false" :adm="false"></product>
     </div>
@@ -43,7 +34,7 @@ export default {
 <style>
 div.bakery-product-container {
   display: flex;
-  max-width: 1450px;
+  max-width: 100%;
   margin-top: 20px;
 }
 

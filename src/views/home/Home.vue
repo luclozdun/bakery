@@ -37,13 +37,9 @@
 </template>
 
 <script>
-import Animation from "@/js/animation.js";
 
 export default{
-    name: 'Home',
-    mounted(){
-        Animation.ScrollDown('food','scale-animation');
-    }
+    name: 'Home'
 }
 </script>
 
@@ -93,14 +89,12 @@ div.card-principal div.card-desc{
 }
 
 div.card-principal div.card-desc p{
-    font-family: Poppins-Bold;
     text-align: center;    
     font-size: 24px;
     color: var(--default);
 }
 
 div.card-principal div.card-desc input{
-    font-family: Poppins-Regular;
     margin: 20px 0px;
     width: 70%;
     padding: 0.5em 0.6em;
@@ -169,7 +163,6 @@ div.container div.gallery div.food img{
 
 div.container div.gallery div.food p{
     color: var(--default);
-    font-family: Poppins-Bold;
     font-size: 26px;
     position: absolute;
     z-index: 11;

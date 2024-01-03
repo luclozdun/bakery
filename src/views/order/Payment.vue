@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="container-payment" v-if="visible">
+  <div v-if="visible">
+    <div class="container-payment">
       <div class="card-payment">
         <p class="payment-title" @click="hide()">Realizar Pago</p>
         <hr />
@@ -20,7 +20,7 @@
               <div class="p-price">
                 <p>
                   S/
-                  <label>{{ cake.stock * cake.price }}</label>
+                  <label>{{ (cake.stock * cake.price).toFixed(2) }}</label>
                 </p>
               </div>
             </div>
@@ -35,7 +35,7 @@
               <div class="p-price">
                 <p>
                   S/
-                  <label>{{ order.admCost }}</label>
+                  <label>{{ order.admCost.toFixed(2) }}</label>
                 </p>
               </div>
             </div>
@@ -50,7 +50,7 @@
               <div class="p-price">
                 <p>
                   S/
-                  <label>{{ order.delivery }}</label>
+                  <label>{{ order.delivery.toFixed(2) }}</label>
                 </p>
               </div>
             </div>
@@ -63,12 +63,12 @@
             <div class="p-price">
               <p>
                 S/
-                <label>{{ order.total }}</label>
+                <label>{{ order.total.toFixed(2) }}</label>
               </p>
             </div>
           </div>
           <div class="paypal">
-            <paypal :order="orderpaypal"></paypal>
+            <paypal :order="orderpaypal" @operation="handleOperation"></paypal>
           </div>
         </div>
       </div>
@@ -139,6 +139,9 @@ export default {
     redirec() {
       this.$router.push({ path: "/" });
     },
+    handleOperation(payload) {
+    this.$emit('showModalMessage',payload)
+  }
   },
 };
 </script>

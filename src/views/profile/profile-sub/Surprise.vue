@@ -2,7 +2,7 @@
     <div>
         <div class="container-surprise">
             <div class="profile-title">
-                <p>Sorprendete por cada compra realizada{Mejorar Lema}</p>
+                <Title text="Dulce, pastel y sopresa"/>
             </div>
             <div class="suprise-text">
                 <p>Por cada compra obtienes tu ticket para participar en los sorteos diarios, semanales y anuales</p>
@@ -34,17 +34,19 @@
 </template>
 
 <script>
+import Title from '../../../components/Title.vue';
+
 export default{
-    name: 'Privacy'
+    name: 'Privacy',
+    components: { Title }
 }
 </script>
 
 
-<style>
+<style scoped>
 div.container-surprise div.suprise-text{
     margin-top: 25px;
     font-size: 18px;
-    font-family: Poppins-Medium;
     color: var(--text);
 }
 
@@ -65,6 +67,5 @@ div.container-surprise div.surprise-time div.img{
 div.container-surprise div.surprise-time div.suprise-time-title{
     color: var(--subtitle);
     font-size: 23px;
-    font-family: Poppins-Bold;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="nav-bar">
     <router-link to="/">
       <div class="nav-title" @click="closeNav">
-        <p>KeekoYa</p>
+        <p class="font-bold text-title">KeekoYa</p>
       </div>
     </router-link>
     <div class="nav-option">
@@ -23,7 +23,7 @@
                 <div class="nav-icon">
                   <img />
                 </div>
-                <div class="nav-desc">
+                <div class="nav-desc font-bold">
                   <p>{{ router.desc }}</p>
                 </div>
               </div>
@@ -33,7 +33,7 @@
                 <div class="nav-icon">
                   <img />
                 </div>
-                <div class="nav-desc">
+                <div class="nav-desc font-bold">
                   <p>Cerrar Sesion</p>
                 </div>
               </div>
@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import Animation from "@/js/animation.js";
 
 export default {
   name: "NavBar",
@@ -110,11 +109,6 @@ export default {
       function render(media) {
         if (media.matches) {
           localdata.active = true;
-          localdata.menu = Animation.LeftRight(
-            "nav-router",
-            "nav-bar",
-            localdata.menu
-          );
         } else {
           localdata.active = false;
           localdata.menu = true;
@@ -126,21 +120,11 @@ export default {
     activeNav() {
       let localdata = this;
       if (localdata.active == true) {
-        localdata.menu = Animation.LeftRight(
-          "nav-router",
-          "nav-bar",
-          localdata.menu
-        );
       }
     },
     closeNav() {
       let localdata = this;
       if (localdata.menu == true) {
-        localdata.menu = Animation.LeftRight(
-          "nav-router",
-          "nav-bar",
-          localdata.menu
-        );
       }
     },
   },
@@ -177,7 +161,6 @@ div.nav-bar > div {
 div.nav-bar div.nav-title {
   height: 100%;
   padding: 0 25px;
-  font-family: Poppins-Black;
   font-size: 22px;
   color: var(--second);
   display: flex;
@@ -253,7 +236,6 @@ div.nav-router div.nav-grid div.nav-icon {
 div.nav-router div.nav-grid div.nav-desc {
   grid-area: desc;
   color: var(--primary);
-  font-family: Poppins-Bold;
   font-size: 1.1rem;
 }
 

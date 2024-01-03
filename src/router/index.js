@@ -6,6 +6,7 @@ import Home from '../views/home/Home.vue'
 import SignIn from '../views/sign/SignIn.vue'
 import SignUp from '../views/sign/SignUp.vue'
 import SignInBaker from '../views/sign/SignInBaker.vue'
+import SignInAdmin from '../views/sign/SignInAdmin.vue'
 
 import Bakery from '../views/bakery/Bakery.vue'
 import BakeryProducts from '../views/bakery/BakeryProducts.vue'
@@ -44,6 +45,11 @@ const routes = [
     path: '/login/baker',
     name: 'SignInBaker',
     component: SignInBaker
+  },
+  {
+    path: '/login/owner',
+    name: 'SignInAdmin',
+    component: SignInAdmin
   },
   {
     path: '/register',
@@ -99,14 +105,14 @@ const routes = [
         path: 'addproduct',
         name: 'AddProduct',
         component: AddProduct
+      },
+      {
+        path: 'checkbaker',
+        name: 'checkBaker',
+        component: CheckBaker
       }
     ]
-  },
-  {
-    path: '/checkbaker',
-    name: 'checkBaker',
-    component: CheckBaker
-  },
+  },  
   {
     path: '/myorder',
     name: 'Order',

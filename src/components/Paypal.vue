@@ -59,27 +59,35 @@ export default {
       return actions.order.create(this.purchase);
     },
     onApprove(data, actions) {
-      return actions.order.capture().then((detail) => {
+      var success = true
+      actions.order.capture().then((detail) => {
         console.log(detail);
         this.order.code = detail.id;
         this.order.createdDate = detail.create_time;
+        var success = false;
         OrderService.create(this.order).then(
           (res) => {
             console.log(res.data);
+              success = true
           },
           (error) => {
             console.log(error);
+            success = false
           }
         );
         this.$store.dispatch("OrderProduct/buy", this.bakerId).then(
           () => {
-            console.log("Bien");
+            success = true
           },
           (error) => {
-            console.log(error);
+            success = false
           }
         );
         this.$parent.finishPayment(detail);
+      }).then(() => {
+        this.$emit('operation', {
+              success: success
+            });
       });
     },
     onError() {

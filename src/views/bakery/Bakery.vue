@@ -1,38 +1,38 @@
 <template>
   <div>
-    <div class="search-location">
-      <input placeholder="buscar por locacion" />
-    </div>
-    <div class="bakeries" v-for="bakery in bakeries" :key="bakery.id">
-      <div class="card-bakery">
-        <div class="card-bakery-icon">
-          <div></div>
-        </div>
-        <div class="card-bakery-desc">
-          <p class="title">{{ bakery.nameBakery }}</p>
-          <p class="desc">{{ bakery.desc }}</p>
-          <p class="desc">Costo: {{ bakery.cost }}</p>
-          <p class="desc">Ubicacion: {{ bakery.location }}</p>
-          <div class="option">
-            <router-link
-              :to="{ name: 'BakeryProducts', params: { id: bakery.id } }"
-            >
-              <button class="first">Visualizar Carta</button>
-            </router-link>
-            <router-link
-              :to="{ name: 'BakeryProducts', params: { id: bakery.id } }"
-            >
-              <button class="second">Reservar pedido</button>
-            </router-link>
+    <div v-if="reload">
+      <div class="bakeries" v-for="bakery in bakeries" :key="bakery.id">
+        <div class="card-bakery">
+          <div class="card-bakery-desc ml-8">
+            <p class="text-xl text-title font-bold">{{ bakery.nameBakery }}</p>
+            <p class="desc">{{ bakery.desc }}</p>
+            <p class="desc">Costo: {{ bakery.cost }}</p>
+            <p class="desc">Ubicacion: {{ bakery.location }}</p>
+            <div class="option">
+              <router-link :to="{ name: 'BakeryProducts', params: { id: bakery.id } }">
+                <button class="first">Visualizar Carta</button>
+              </router-link>
+              <router-link :to="{ name: 'BakeryProducts', params: { id: bakery.id } }">
+                <button class="second">Reservar pedido</button>
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
+      <div>
+        <Empty :show="bakeries.length === 0" message="No se encontro información de ninguna pastelería." />
+      </div>
+    </div>
+    <div v-if="loading">
+      <Loading/>
     </div>
   </div>
 </template>
 
 <script>
 import BakeryService from "@/service/bakery/BakeryService";
+import Empty from "../../components/Empty.vue";
+import Loading from '../../components/Loading.vue';
 
 export default {
   name: "Bakery",
@@ -40,21 +40,25 @@ export default {
     return {
       tasteCakes: [],
       bakeries: [],
+      loading: true,
+      reload: false
     };
   },
   methods: {
     getAllBakery() {
-      BakeryService.getAll().then(
-        (reponse) => {
-          this.bakeries = reponse.data;
-        },
-        (error) => console.log(error)
-      );
+      this.loading = true
+      BakeryService.getAll().then((reponse) => {
+        this.bakeries = reponse.data;
+        this.reload = true
+        this.loading = false
+      }, (error) => console.log(error));
     },
   },
   mounted() {
+    console.log("aasdsd")
     this.getAllBakery();
   },
+  components: { Empty, Loading }
 };
 </script>
 
@@ -65,10 +69,9 @@ div.search-location {
   background: hsl(249, 100%, 80%);
   display: flex;
   align-items: center;
-  font-family: Poppins-Regular;
 }
 
-div.search-location > input {
+div.search-location>input {
   padding: 10px 8px 10px 8px;
   border-radius: 25px;
   margin-left: 50px;
@@ -99,7 +102,7 @@ div.card-bakery-icon {
   justify-content: center;
 }
 
-div.card-bakery-icon > div {
+div.card-bakery-icon>div {
   margin-top: 50px;
   width: 130px;
   height: 130px;
@@ -116,7 +119,6 @@ div.card-bakery-desc {
 div.card-bakery-desc p.title {
   font-size: 30px;
   color: var(--title);
-  font-family: Poppins-Bold;
   margin: 5px 0px;
 }
 
@@ -124,7 +126,6 @@ div.card-bakery-desc p.desc {
   color: var(--subtitle);
   margin: 6px 0px 0px 8px;
   font-size: 16px;
-  font-family: Poppins-Regular;
 }
 
 div.card-bakery-desc div.option {
@@ -140,7 +141,6 @@ div.card-bakery-desc div.option a {
 }
 
 div.card-bakery-desc div.option a button {
-  font-family: Poppins-Bold;
   border: none;
   border-radius: 5px;
   width: 100%;
@@ -167,7 +167,7 @@ div.card-bakery-desc div.option a:active button.second {
   background: var(--special2-btn-active);
 }
 
-div.card-bakery-desc > div.point {
+div.card-bakery-desc>div.point {
   display: flex;
   justify-content: center;
   height: 50px;
@@ -180,19 +180,23 @@ div.card-bakery-desc > div.point {
     height: 100%;
     padding-bottom: 25px;
   }
+
   div.card-bakery-icon {
     width: 90%;
     position: absolute;
     margin-top: 15px;
   }
+
   div.card-bakery-desc p.title {
     text-align: center;
     margin-bottom: 150px;
     font-size: 35px;
   }
+
   div.card-bakery-desc {
     width: 50%;
   }
+
   div.card-bakery-desc p.desc {
     text-align: center;
     font-size: 16px;
@@ -210,7 +214,7 @@ div.card-bakery-desc > div.point {
     margin: 0;
   }
 
-  div.card-bakery-desc > div.option {
+  div.card-bakery-desc>div.option {
     flex-direction: column;
     align-items: center;
   }
